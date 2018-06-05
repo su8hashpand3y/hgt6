@@ -1,0 +1,25 @@
+<input type="file" (change)="videoSelected($event)"  #selectedFile name="selectedFile" class="form-control" required id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Select File"  accept="video/mp4,video/mov,video/*">
+
+<div>
+ We have Selected a Thumbnail to show for your video,play video and use Below Button to change it
+</div>
+<video  #video (loadedmetadata)="loadedmetadata()" hidden controls  [src]="videoLocalPath">
+</video>
+<button (click)="snap()">Make This My Thumbnail</button>
+<div class="container">
+    <div class="row">
+            <div class="row">
+                    <canvas  #canvas ></canvas>
+                 </div>
+      <div class="row" >
+          <mat-slider
+          thumbLabel
+          [value]="this.video.currentTime"
+          step="2"
+          tickInterval="2"
+          (input)="onInputChange($event)"
+          [min]="0"
+          [max]="max"></mat-slider>
+      </div>
+    </div>
+
