@@ -32,7 +32,7 @@ export class ThumbnailExtractorComponent implements OnInit {
   onInputChange(event: any) {
     if( this.video){
     this.video.currentTime = event.value;
-    setTimeout(x=>this.snap(),100);
+    setTimeout(x=>this.snap(),500);
     }
   }
 
@@ -50,7 +50,7 @@ export class ThumbnailExtractorComponent implements OnInit {
     console.log(this.video.duration);
     // this.canvas.crossOrigin = "Anonymous";
     this.video.currentTime= this.video.duration / 2;
-    setTimeout(x=>this.snap(),100);
+    setTimeout(x=>this.snap(),500);
   }
   
   videoSelected(event){

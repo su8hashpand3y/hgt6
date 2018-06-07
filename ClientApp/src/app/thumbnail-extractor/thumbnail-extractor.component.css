@@ -7,3 +7,7 @@
 mat-slider {
   width: 300px;
 }
+
+.centered{
+  margin:auto;
+}
