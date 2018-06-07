@@ -8,7 +8,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 export class ThumbnailExtractorComponent implements OnInit {
 
 
-videoLocalPath:string = "/Media/TempToDelete/SampleVideo_1280x720_1mb.mp4";
+  videoLocalPath: string = "https://s3.ap-south-1.amazonaws.com/hgtdata/e8b117af-de0c-4791-889d-75a3cd0b2616_201866161557.mp4";
 
   w:any;
   h:any;

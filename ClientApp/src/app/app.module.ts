@@ -5,6 +5,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
+import { ToastrModule } from 'ngx-toastr';
+
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -34,7 +36,8 @@ import { ServerErrorsInterceptor } from './ServerErrorsInterceptor';
       { path: 'fetch-data', component: FetchDataComponent },
     ]),
     BrowserAnimationsModule,
-    MatSliderModule
+    MatSliderModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     {
