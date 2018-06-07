@@ -21,27 +21,43 @@
     </div> -->
 
     <div class="container">
-        <div class="row">
-          <div class="col-sm" (click)="showSuccess()">
-              <div class="embed-responsive embed-responsive-16by9">
-                  <video class="video-fluid z-depth-1 "  loop controls>
-                    <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4#t=1" type="video/mp4" />
-                  </video>
-                  </div>
+      <div class="row">
+        <div class="col-md-4" (click)="showSuccess()" *ngFor="let vid of videos">
+          <div class="embed-responsive embed-responsive-16by9">
+            <video class="video-fluid z-depth-1 " loop controls>
+              <source [src]="vid" type="video/mp4" />
+            </video>
           </div>
-          <div class="col-sm">
-              <div class="embed-responsive embed-responsive-16by9">
-                  <video class="video-fluid z-depth-1 "  loop controls>
-                    <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4" type="video/mp4" />
-                  </video>
-                  </div>
-          </div>
-          <div class="col-sm">
-              <div class="embed-responsive embed-responsive-16by9">
-                  <video class="video-fluid z-depth-1 "  loop controls>
-                    <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4" type="video/mp4" />
-                  </video>
-                  </div>
+          <div>Video ABCD </div>
+          <div>HGT FROM HGT </div>
+        </div>
+        <div class="col-md-4">
+          <div class="embed-responsive embed-responsive-16by9">
+            <video class="video-fluid z-depth-1 " loop controls>
+              <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
+        <div class="col-md-4">
+          <div class="embed-responsive embed-responsive-16by9">
+            <video class="video-fluid z-depth-1 " loop controls>
+              <source src="https://s3.ap-south-1.amazonaws.com/hgtdata/e8b117af-de0c-4791-889d-75a3cd0b2616_20186791823.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="embed-responsive embed-responsive-16by9">
+            <video class="video-fluid z-depth-1 " loop controls>
+              <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="embed-responsive embed-responsive-16by9">
+            <video class="video-fluid z-depth-1 " loop controls>
+              <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </div>
       </div>
