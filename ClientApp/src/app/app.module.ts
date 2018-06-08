@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSliderModule} from '@angular/material/slider';
 import { ToastrModule } from 'ngx-toastr';
+import { LoadingModule, ANIMATION_TYPES } from 'ngx-loading';
 
 
 import { AppComponent } from './app.component';
@@ -16,6 +17,8 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ThumbnailExtractorComponent } from './thumbnail-extractor/thumbnail-extractor.component';
 import { ErrorsHandler } from './ErrorsHandler';
 import { ServerErrorsInterceptor } from './ServerErrorsInterceptor';
+import { VideoComponent } from './video/video.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,8 @@ import { ServerErrorsInterceptor } from './ServerErrorsInterceptor';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    ThumbnailExtractorComponent
+    ThumbnailExtractorComponent,
+    VideoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -33,11 +37,21 @@ import { ServerErrorsInterceptor } from './ServerErrorsInterceptor';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'thumb', component: ThumbnailExtractorComponent },
+      { path: 'video/:id', component: VideoComponent },
       { path: 'fetch-data', component: FetchDataComponent },
     ]),
     BrowserAnimationsModule,
     MatSliderModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MatIconModule,
+    LoadingModule.forRoot({
+      animationType: ANIMATION_TYPES.wanderingCubes,
+      backdropBackgroundColour: 'rgba(0,0,0,0.1)',
+      backdropBorderRadius: '4px',
+      primaryColour: '#ffffff',
+      secondaryColour: '#ffffff',
+      tertiaryColour: '#ffffff'
+    })
   ],
   providers: [
     {

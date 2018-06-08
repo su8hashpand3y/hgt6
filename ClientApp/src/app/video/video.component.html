@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="embed-responsive embed-responsive-16by9">
+        <video class="video-fluid z-depth-1 " loop controls>
+          <source [src]="videoUrl" type="video/mp4" />
+        </video>
+      </div>
+      <div>Video ABCD </div>
+      <div>HGT FROM HGT </div>
+
+      <div style="font-size:48px; color:Tomato">
+        <mat-icon>bookmark</mat-icon>
+
+      </div>
+      <mat-icon>home</mat-icon>
+      <mat-icon>bookmark</mat-icon>
+      <button (click)="load()">Load</button>
+      <div class="my-container">
+        <ngx-loading [show]="loading" ></ngx-loading>
+        ...
+      </div>
+    </div>
+    </div>
+  </div>
