@@ -19,6 +19,8 @@ import { ErrorsHandler } from './ErrorsHandler';
 import { ServerErrorsInterceptor } from './ServerErrorsInterceptor';
 import { VideoComponent } from './video/video.component';
 import { MatIconModule } from '@angular/material/icon';
+import { ErrorComponent } from './error/error.component';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
     CounterComponent,
     FetchDataComponent,
     ThumbnailExtractorComponent,
-    VideoComponent
+    VideoComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -39,6 +42,7 @@ import { MatIconModule } from '@angular/material/icon';
       { path: 'thumb', component: ThumbnailExtractorComponent },
       { path: 'video/:id', component: VideoComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'error', component: ErrorComponent },
     ]),
     BrowserAnimationsModule,
     MatSliderModule,
@@ -51,7 +55,8 @@ import { MatIconModule } from '@angular/material/icon';
       primaryColour: '#ffffff',
       secondaryColour: '#ffffff',
       tertiaryColour: '#ffffff'
-    })
+    }),
+    InfiniteScrollModule
   ],
   providers: [
     {

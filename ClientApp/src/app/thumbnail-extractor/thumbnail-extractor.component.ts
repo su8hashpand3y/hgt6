@@ -48,7 +48,7 @@ export class ThumbnailExtractorComponent implements OnInit {
     this.canvas.height = 200;	
     this.max = this.video.duration;
     console.log(this.video.duration);
-    // this.canvas.crossOrigin = "Anonymous";
+    this.canvas.crossOrigin = "Anonymous";
     this.video.currentTime= this.video.duration / 2;
     setTimeout(x=>this.snap(),500);
   }
@@ -69,9 +69,10 @@ export class ThumbnailExtractorComponent implements OnInit {
 			// Define the size of the rectangle that will be filled (basically the entire element)
 			this.context.fillRect(0, 0, this.w, this.h);
       // Grab the image from the video
-      this.context.drawImage(this.video, 0, 0, 300, 200);
-      var dataURL = this.canvas.toDataURL();
-      // console.log(dataURL);
+       this.context.drawImage(this.video, 0, 0, 300, 200);
+           
+       let dataURL = this.canvas.toDataURL();
+       console.log(dataURL);
 		}
 		 
 	

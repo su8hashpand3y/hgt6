@@ -3,7 +3,7 @@
 
 
 
-<video  #video (loadedmetadata)="loadedmetadata()" hidden controls  [src]="videoLocalPath">
+<video  #video (loadedmetadata)="loadedmetadata()" hidden controls  [src]="videoLocalPath" crossOrigin="anonymous">
 </video>
 
 <div class="container">
@@ -16,7 +16,7 @@
         </div>
 
         <div class="row justify-content-center">
-            <canvas  #canvas ></canvas>
+            <canvas  #canvas crossOrigin="anonymous" ></canvas>
         </div>
 
         <div class="row justify-content-center">
