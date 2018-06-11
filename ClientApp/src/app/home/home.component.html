@@ -26,7 +26,7 @@
      [infiniteScrollDistance]="2"
      [infiniteScrollThrottle]="50"
      [infiniteScrollDisabled]="isFullListDisplayed"
-     [scrollWindow]="true"
+     [scrollWindow]="false"
      (scrolled)="onScroll()">
         <div class="col-md-4" (click)="showSuccess(vid)" *ngFor="let vid of videos">
           <div class="embed-responsive embed-responsive-16by9">

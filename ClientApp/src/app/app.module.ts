@@ -21,6 +21,7 @@ import { VideoComponent } from './video/video.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ErrorComponent } from './error/error.component';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { CommentsComponent } from './comments/comments.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { InfiniteScrollModule } from "ngx-infinite-scroll";
     FetchDataComponent,
     ThumbnailExtractorComponent,
     VideoComponent,
-    ErrorComponent
+    ErrorComponent,
+    CommentsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
