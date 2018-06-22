@@ -1,24 +1,29 @@
 
 
 
+ <ngx-loading [show]="loading"></ngx-loading>
+ <h1>Login</h1>
 
-
-<video  #video (loadedmetadata)="loadedmetadata()" hidden controls  [src]="videoLocalPath" crossOrigin="anonymous">
+<video  #video (loadedmetadata)="loadedmetadata()" hidden controls   crossOrigin="anonymous">
 </video>
-
+<span *ngIf="errors">{{errors}}</span>
 <div class="container">
         <div  class="row justify-content-center col-8 centered">
             <input type="file" (change)="videoSelected($event)"  #selectedFile name="selectedFile" class="form-control" required id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Select File"  accept="video/mp4,video/mov,video/*">
+            <span *ngIf="errors">{{errors}}</span>
         </div>
 
+        <div *ngIf="loadedToStore">
         <div class="row justify-content-center">
             We have Selected a Thumbnail to show for your video,play video and use Below Button to change it
+        </div>
         </div>
 
         <div class="row justify-content-center">
             <canvas  #canvas crossOrigin="anonymous" ></canvas>
         </div>
 
+        <div *ngIf="loadedToStore">
         <div class="row justify-content-center">
             <mat-slider
                 thumbLabel
@@ -34,5 +39,30 @@
         <div class="row justify-content-center">
             <button (click)="snap()">Click here If you See Blank</button>
         </div>
+
+        <mat-form-field class="example-full-width">
+                <input matInput placeholder="Name"  [(ngModel)]="name" name="name" >
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Description"  [(ngModel)]="description" name="description" >
+                  </mat-form-field>
+
+                  <mat-form-field>
+                        <mat-select placeholder="category" [(ngModel)]="category" name="category" aria-required>
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field class="example-full-width" *ngIf="category == 'other'">
+                            <input matInput placeholder="category"  [(ngModel)]="category" name="category" >
+                          </mat-form-field>
+                          <div class="button-row">
+                                <button mat-button (click)="cancel()">Cancel</button>
+                                <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+                                </div>
+                                <span *ngIf="errors">{{errors}}</span>
+    </div>
 </div>
 
