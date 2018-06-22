@@ -11,9 +11,8 @@ namespace HGT6.ViewModels
     {
         public long VideoId { get; set; }
 
-        public string FolderName { get; set; }
-        public string FileName { get; set; }
-        public string Poster { get; set; }
+        public string VideoUrl { get; set; }
+        public string PosterUrl { get; set; }
         public string Format { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

@@ -77,7 +77,7 @@ namespace HGT6
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
-
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -85,6 +85,8 @@ namespace HGT6
                     template: "{controller}/{action=Index}/{id?}");
             });
 
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            
             //app.UseSpa(spa =>
             //{
             //    // To learn more about options for serving an Angular SPA from ASP.NET Core,

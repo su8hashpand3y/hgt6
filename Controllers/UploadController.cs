@@ -68,7 +68,7 @@ namespace HGT6.Controllers
         }
 
         [HttpPost("[action]")]
-        // [Authorize]
+        [Authorize]
         // [RequestSizeLimit(1073741823)]
         public async Task<IActionResult> Upload(UploadInfoViewModel fileInfo)
         {
@@ -99,9 +99,9 @@ namespace HGT6.Controllers
                         await this.UploadFileAsync(Convert.FromBase64String(base64Image), path);
                         videoInfo.PosterUrl  = path;
                     }
-                    context.Videos.Add(videoInfo);
+                        context.Videos.Add(videoInfo);
                         await context.SaveChangesAsync();
-                        return Ok(new ServiceResponse { Status = "success", Message = "File Upload Complete" });
+                        return Ok(new ServiceResponse { Status = "success", Message = videoInfo.ID.ToString() });
                 }
                 catch
                 {

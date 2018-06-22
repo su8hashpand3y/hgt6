@@ -37,6 +37,7 @@ export class LoginComponent  {
               else
                   this.toast.success(`${this.email} was not Logged In`);
           }
+          this.dialogRef.close();
           this.loading= false
   });
   }
@@ -46,12 +47,13 @@ export class LoginComponent  {
   }
 
   forgotPassword(){
+    this.cancel();
     console.log("forgotten");
   }
 
   saveUrl(){
     this.authService.setReturnUrl(this.router.url);
-    console.log(this.router.url);
+    this.cancel();
   }
 
 }

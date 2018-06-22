@@ -30,9 +30,8 @@ public class VideoController : Controller
             {
                 HGTUser user = video.HGTUser;
                 result.Add(new VideoViewModel {
-                    FolderName = video.FolderName,
-                    FileName = video.FileName,
-                    Poster = video.Poster ?? Default_Poster,
+                    VideoUrl= video.VideoUrl,
+                    PosterUrl = video.PosterUrl ?? Default_Poster,
                     Format = video.Format,
                     Description = video.Description,
                     Title = video.Title,
