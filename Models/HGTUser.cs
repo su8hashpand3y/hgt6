@@ -22,5 +22,6 @@ namespace HGT6.Models
         public bool IsDeleted { get; set; }
         public bool SuperUser { get; set; }
         public List<VideoInfo> Videos {get; set;}
+        public List<Comment> Comments {get; set; }
     }
 }

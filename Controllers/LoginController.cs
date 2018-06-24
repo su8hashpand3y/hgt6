@@ -23,7 +23,7 @@ namespace HGT6.Controllers
   [Route("api/[controller]")]
     public class LoginController : Controller
     {
-        private const string bucketName = "hgtdata";
+        private const string bucketName = "hgtdata2";
         // Specify your bucket region (an example region is shown).
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.APSoutheast1;
         private IAmazonS3 s3Client;
@@ -37,8 +37,9 @@ namespace HGT6.Controllers
             this.s3Client = s3Client;
         }
 
-        private async Task UploadFileAsync(byte[] file, string keyName)
+        private async Task<bool> UploadFileAsync(byte[] file, string keyName)
         {
+            bool success = false;
             try
             {
                 var fileTransferUtility = new TransferUtility(this.s3Client);
@@ -55,6 +56,7 @@ namespace HGT6.Controllers
 
 
                 await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
+                success = true;
             }
             catch (AmazonS3Exception e)
             {
@@ -65,6 +67,7 @@ namespace HGT6.Controllers
                 Console.WriteLine("Unknown encountered on server. Message:'{0}' when writing an object", e.Message);
             }
 
+            return success;
         }
 
         [HttpGet("[action]")]
@@ -74,9 +77,9 @@ namespace HGT6.Controllers
             {
                 var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
                 Random r = new Random();
-                var randomId = r.Next(0,context.Capthas.Count());
+                var randomId = r.Next(1,context.Capthas.Count()+1);
                var captha = context.Capthas.Single(x=>x.Id == randomId);
-              return Ok(new ServiceTypedResponse<CapthaResponse>() {Status ="Ok" ,Message = new CapthaResponse { CapthaId =captha.Id,CapthaText =captha.CapthaText}});
+              return Ok(new ServiceTypedResponse<CapthaResponse>() {Status ="ok" ,Message = new CapthaResponse { CapthaId =captha.Id,CapthaText =captha.CapthaText}});
     
             }
             catch (System.Exception)
@@ -118,13 +121,22 @@ namespace HGT6.Controllers
                         if (!String.IsNullOrEmpty(model.AvatarImage))
                         {
                             var startIndex = model.AvatarImage.IndexOf("base64,");
-                            var base64Image = model.AvatarImage.Substring(startIndex + 6);
+                            var base64Image = model.AvatarImage.Substring(startIndex + 7);
                             var index1 = model.AvatarImage.IndexOf('/');
                             var index2 = model.AvatarImage.IndexOf(';');
-                            var ext = model.AvatarImage.Substring(index1, index2 - index1);
+                            var ext = model.AvatarImage.Substring(index1+1, index2 - index1-1);
+                            model.Email = model.Email.Replace('.', '_');
                             string path = $"{model.Email}.{ext}";
-                            await this.UploadFileAsync(Convert.FromBase64String(base64Image), path);
+                            if (!await UploadFileAsync(Convert.FromBase64String(base64Image), path))
+                            {
+                                return Ok(new ServiceResponse { Status = "error", Message = "Service Not Up" });
+                            }
                             newUser.AvatarImage = $"https://s3.ap-south-1.amazonaws.com/{bucketName}/{path}";
+                        }
+
+                        if(context.Capthas.Single(x => x.Id == model.CapthaId).CapthaAnswer != model.Captha)
+                        {
+                            return Ok(new ServiceResponse { Status = "error", Message = "Captha Answer not Matched" });
                         }
 
                         context.HGTUsers.Add(newUser);
@@ -133,10 +145,14 @@ namespace HGT6.Controllers
                         // Login the User and send a token back
                         return this.LoginUser(new LoginViewModel { Email= model.Email,Password= model.Password});
                     }
+                    else
+                    {
+                        return Ok(new ServiceResponse { Status = "error", Message = "User Already Exists" });
+                    }
                 }
                 catch 
                 {
-                    return BadRequest("Oops, Something went wrong :(");
+                    return Ok(new ServiceResponse { Status = "error", Message = "Somthing doesn't seems to work" });
                 }
             }
             else
@@ -152,8 +168,6 @@ namespace HGT6.Controllers
 
                  return Ok(new ServiceResponse{ Status ="error",Message = modelErrors.ToString()});
             }
-
-            return Ok(new ServiceResponse{ Status ="error",Message = "Somthing doesn't seems to work"});
         }
 
 

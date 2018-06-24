@@ -13,37 +13,62 @@ namespace HGT6.Controllers
 {
 public class VideoController : Controller
     {
-        string Default_Poster = "/Media/Got_Talent_logo.jpg";
         private IServiceProvider services { get; }
         public VideoController(IServiceProvider services)
         {
             this.services = services;
         }
         // GET: /<controller>/ 
-        // [HttpGet()]
-        public IActionResult Index(long skip,int take = 10)
+        [HttpGet()]
+        public IActionResult GetVideo(long id)
         {
-            var result = new List<VideoViewModel>();
+            VideoViewModel result = null; ;
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
            
-            foreach (var video in context.Videos.Include(x=>x.HGTUser))
+            var video = context.Videos.Include(x=>x.HGTUser).FirstOrDefault(x=>x.ID == id);
+            if(video != null)
             {
                 HGTUser user = video.HGTUser;
-                result.Add(new VideoViewModel {
-                    VideoUrl= video.VideoUrl,
-                    PosterUrl = video.PosterUrl ?? Default_Poster,
+                result = new VideoViewModel
+                {
+                    VideoUrl = video.VideoUrl,
+                    PosterUrl = video.PosterUrl,
                     Format = video.Format,
                     Description = video.Description,
                     Title = video.Title,
                     UserFirstName = user?.FirstName,
+                    UserLastName = user?.LastName,
                     UserDistrict = user?.District,
+                    UserTown = user?.Town,
                     UserId = user?.Id,
                     NumberOfLikes = video.Likes,
-                    VideoId = video.ID
-                });
+                    VideoId = video.ID,
+                    NumberOfViews = video.Views
+                };
+
+                try
+                {
+                    video.Views++;
+                    context.SaveChangesAsync();
+                }
+                catch 
+                {
+                }
+
+                return Ok(new ServiceTypedResponse<VideoViewModel> { Status = "good", Message = result });
             }
 
-            return Ok(result);
+            return Ok(new ServiceResponse { Status = "bad", Message = "Cant get this video" });
+        }
+
+        [HttpGet()]
+        public IActionResult GetComments(long id)
+        {
+            var result = new List<CommentViewModel>();
+            var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
+            var comments = context.Comments.Include(x=>x.HGTUser).Where(x => x.VideoId == id).ToList();
+            comments.ForEach(x => result.Add(new CommentViewModel { CommentText= x.CommentText,UserFirstName= x.HGTUser?.FirstName }));
+            return Ok(new ServiceTypedResponse<List<CommentViewModel>> { Status = "good", Message = result });
         }
 
         [HttpPost]
@@ -73,7 +98,7 @@ public class VideoController : Controller
             if (likedVideo != null)
             {
                 likedVideo.Comments++;
-                var comment = new Comment { VideoId = videoId, UserId = HttpContext.GetUserID(), CommentText = commentText };
+                var comment = new Comment { VideoId = videoId, HGTUserID = HttpContext.GetUserID(), CommentText = commentText };
                 context.Comments.Add(comment);
                 context.SaveChanges();
                 return Ok(comment);

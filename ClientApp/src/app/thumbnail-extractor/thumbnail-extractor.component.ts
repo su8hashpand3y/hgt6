@@ -129,6 +129,7 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
                       this.toast.success(`Your video ${this.name} was uploaded successfully.`);
                       this.router.navigateByUrl(`/Video/${x.message}`);
                    }
+                   
                    if(x.status == 'error'){
                      this.errors = x.message;
                    }});

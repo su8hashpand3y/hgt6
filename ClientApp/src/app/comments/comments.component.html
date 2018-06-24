@@ -1,3 +1,17 @@
-<p>
-  comments works!
-</p>
+
+ <button mat-raised-button color="primary" (click)="login()" *ngIf="!isAuthenticated">Login To Like/Comment</button>
+<form class="" ngNativeValidate (ngSubmit)="signIn()" *ngIf="isAuthenticated">
+  <mat-form-field class="fullWdth">
+    <input matInput placeholder="Type your Comment Here"  [(ngModel)]="UserComment" name="UserComment" required>
+  </mat-form-field>
+  <div class="button-row right">
+      <button mat-raised-button color="primary" (click)="comment()">Comment</button>
+  </div>
+  </form>
+
+<div>
+  <div *ngFor="let comment of comments" class="col-7 dialogbox">
+   <div class="message">{{comment.commentText}}</div> 
+   <div class="message right">By {{comment.userFirtName}}</div> 
+  </div>
+</div>> 

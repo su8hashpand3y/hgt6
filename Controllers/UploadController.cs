@@ -91,10 +91,10 @@ namespace HGT6.Controllers
                     if (!String.IsNullOrEmpty(fileInfo.PosterUrl))
                     {
                         var startIndex = fileInfo.PosterUrl.IndexOf("base64,");
-                        var base64Image = fileInfo.PosterUrl.Substring(startIndex + 6);
+                        var base64Image = fileInfo.PosterUrl.Substring(startIndex + 7);
                         var index1 = fileInfo.PosterUrl.IndexOf('/');
                         var index2 = fileInfo.PosterUrl.IndexOf(';');
-                        var ext = fileInfo.PosterUrl.Substring(index1, index2 - index1);
+                        var ext = fileInfo.PosterUrl.Substring(index1+1, index2 - index1-1);
                         string path = $"{fileInfo}.{ext}";
                         await this.UploadFileAsync(Convert.FromBase64String(base64Image), path);
                         videoInfo.PosterUrl  = path;

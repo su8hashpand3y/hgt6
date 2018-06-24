@@ -11,9 +11,10 @@ using System;
 namespace HGT6.Migrations
 {
     [DbContext(typeof(HGTDbContext))]
-    partial class HGTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180624124741_second2")]
+    partial class second2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

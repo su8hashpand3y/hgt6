@@ -1,28 +1,33 @@
+<ngx-loading [show]="loading"></ngx-loading>
 <div class="container">
   <div class="row">
+      <div>{{video.title}} </div>
     <div class="col-md-12">
       <div class="embed-responsive embed-responsive-16by9">
-        <video class="video-fluid z-depth-1 " loop controls>
-          <source [src]="videoUrl" type="video/mp4" />
+        <video class="video-fluid z-depth-1 "  controls>
+          <source [src]="video.videoUrl" type="video/mp4" />
         </video>
       </div>
-      <div>Video ABCD </div>
-      <div>HGT FROM HGT </div>
+      
+      <div>Uploaded By {{video.userFirstName}} {{ video.userLastName }} FROM {{video.userTown}},{{video.userDistrict}} </div><br>
+      <div>{{video.description}} </div>
 
-      <div style="font-size:48px; color:Tomato">
-        <mat-icon>bookmark</mat-icon>
-
-      </div>
-      <mat-icon>home</mat-icon>
-      <mat-icon>bookmark</mat-icon>
-      <button (click)="load()">Load</button>
-      <div class="my-container">
-        <ngx-loading [show]="loading"></ngx-loading>
-        ...
-      </div>
+      <div class="row">
+          <div class="col">12 Like</div>
+          <div class="col right">Like<div style="color:Tomato">
+              <mat-icon class="material-icons md-36" style="">favorite</mat-icon>
+            </div>
+          </div>
+          <div class="w-100"></div>
+          <div class="col">12 Comments</div>
+          <div class="col right">  <div style="font-size:32px; color:Tomato">
+              <mat-icon>screen_share</mat-icon>
+            </div>
+         </div>
+        </div>
     </div>
   </div>
   <div class="row">
-    <app-comments>Loading Comments...</app-comments>
+    <app-comments [videoId]= "video.videoId">Loading Comments...</app-comments>
   </div>
   </div>

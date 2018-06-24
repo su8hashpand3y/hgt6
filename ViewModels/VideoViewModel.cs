@@ -18,8 +18,11 @@ namespace HGT6.ViewModels
         public string Description { get; set; }
         public string UserId { get; set; }
         public string UserFirstName { get; set; }
+        public string UserLastName { get; set; }
+        public string UserTown { get; set; }
         public string UserDistrict { get; set; }
         public long NumberOfLikes { get; set; }
         public long NumberOfComments { get; set; }
+        public long NumberOfViews { get; set; }
     }
 }

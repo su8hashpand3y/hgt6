@@ -74,6 +74,7 @@ import { AvatarPickerComponent } from './avatar-picker/avatar-picker.component';
       { path: 'video/:id', component: VideoComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'error', component: ErrorComponent },
+      { path: 'comment', component: CommentsComponent }
     ]),
     BrowserAnimationsModule,
     MatSliderModule,

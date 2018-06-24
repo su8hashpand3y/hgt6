@@ -22,7 +22,7 @@ namespace HGT6.Controllers
         {
             var result = new List<VideoViewModel>();
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-            IQueryable<VideoInfo> videos;
+            IQueryable<VideoInfo    > videos;
             if (!String.IsNullOrEmpty(type))
             {
                 videos = context.Videos.OrderBy(x=>x.UploadDateTime).Include(x => x.HGTUser).Skip(skip).Take(take);

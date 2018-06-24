@@ -26,7 +26,7 @@ export class LoginComponent  {
       var user = {
           email: this.email,
           password: this.password
-      };
+      };  
 
 
       this.authService.login(user).subscribe((sucesss: any) => {

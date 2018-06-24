@@ -16,6 +16,7 @@ namespace HGT6.Models
         public DateTime UploadDateTime { get; set; }
         public long Likes { get; set; }
         public long Comments { get; set; }
+        public long Views { get; set; }
         public bool  IsFeatured { get; set; }
         public int Donation { get; set; }
         public bool SuperVideo { get; set; }

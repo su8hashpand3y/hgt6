@@ -17,6 +17,7 @@ import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
 })
 export class RegisterComponent implements OnInit {
 
+  loading:boolean;
   email:string;
   avatarImage:string;
   firstName:string;
@@ -45,8 +46,10 @@ export class RegisterComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.http.get<IServiceTypedResponse<ICapthaResponse>>("http://localhost:54412/api/Login/Captha").subscribe( x => {
-      if(x.status == 'ok'){
+    this.http.get<IServiceTypedResponse<ICapthaResponse>>("http://localhost:54412/api/Login/getCaptha").subscribe( x => {
+     
+    console.log(x)
+    if(x.status == 'ok'){
       this.capthaId = x.message.capthaId;
       this.capthaText = x.message.capthaText;
     }
@@ -66,6 +69,7 @@ export class RegisterComponent implements OnInit {
 
 
   register(){
+    this.loading=true;
       let rvm : RegisterViewModel= {
       email : this.email,
       avatarImage : this.avatarImage,
@@ -90,6 +94,7 @@ export class RegisterComponent implements OnInit {
       if(x.status == 'error'){
         this.errors = x.message;
       }
+      this.loading = false;
     });
     
   }
