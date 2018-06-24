@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { MatDialogRef } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { IServiceResponse } from '../ViewModels/IServiceResponse';
+import { MemoryService } from '../memory.service';
 
 @Component({
   selector: 'app-login',
@@ -14,10 +16,10 @@ export class LoginComponent  {
   email: string="";
   password: string="";
   loading:boolean = false;
-  constructor(private router:Router, private toast: ToastrService, private authService: AuthService, public dialogRef: MatDialogRef<LoginComponent>) { }
+  constructor(private memory:MemoryService, private router:Router, private toast: ToastrService, private http: HttpClient, public dialogRef: MatDialogRef<LoginComponent>) { }
 
   signOut() {
-      this.authService.logout();
+      localStorage.removeItem('token');
       this.toast.success("Successfully Logged Out")
   }
 
@@ -27,19 +29,22 @@ export class LoginComponent  {
           email: this.email,
           password: this.password
       };  
-
-
-      this.authService.login(user).subscribe((sucesss: any) => {
-          if (sucesss)
-          {
-              if (this.dialogRef && sucesss.token)
-                  this.dialogRef.close(sucesss);
-              else
-                  this.toast.success(`${this.email} was not Logged In`);
-          }
-          this.dialogRef.close();
-          this.loading= false
-  });
+              this.http.post<IServiceResponse>("/api/Login/Login", user).subscribe(x => {
+        
+                if(x.status == 'registerd'){
+                    localStorage.setItem('token', x.message);
+                    this.toast.info(`Thank You.You are logged in as ${user.email}`);
+                    if (this.dialogRef)
+                    this.dialogRef.close(x.message);
+                  else
+                    this.toast.success(`${this.email} was not Logged In`);
+                  }
+                  if(x.status == 'error'){
+                   this.toast.error(x.message);
+                  }
+                  this.dialogRef.close();
+                  this.loading= false
+              });
   }
 
   cancel(){
@@ -52,7 +57,7 @@ export class LoginComponent  {
   }
 
   saveUrl(){
-    this.authService.setReturnUrl(this.router.url);
+    this.memory.setReturnUrl(this.router.url);
     this.cancel();
   }
 

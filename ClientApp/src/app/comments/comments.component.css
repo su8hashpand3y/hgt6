@@ -12,6 +12,13 @@ div div:nth-child(odd){
     vertical-align: middle;
   }
 
+  .left{
+    text-align: left;
+    vertical-align: left;
+  }
+
+
+
 
   .dialogbox  {
     position: relative;
@@ -35,4 +42,8 @@ div div:nth-child(odd){
 
   .fullWdth{
       width : 95%;
+  }
+
+  .pad{
+    padding: 5px;
   }

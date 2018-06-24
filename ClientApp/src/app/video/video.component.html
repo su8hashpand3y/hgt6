@@ -9,24 +9,16 @@
         </video>
       </div>
       
-      <div>Uploaded By {{video.userFirstName}} {{ video.userLastName }} FROM {{video.userTown}},{{video.userDistrict}} </div><br>
+      <div (click)="gotoUser(video.userId)">Uploaded By {{video.userFirstName}} {{ video.userLastName }} FROM {{video.userTown}},{{video.userDistrict}} </div><br>
       <div>{{video.description}} </div>
 
       <div class="row">
-          <div class="col">12 Like</div>
-          <div class="col right">Like<div style="color:Tomato">
-              <mat-icon class="material-icons md-36" style="">favorite</mat-icon>
-            </div>
-          </div>
-          <div class="w-100"></div>
-          <div class="col">12 Comments</div>
-          <div class="col right">  <div style="font-size:32px; color:Tomato">
-              <mat-icon>screen_share</mat-icon>
-            </div>
-         </div>
+          <div class="col">{{video.numberOfLikes}} Likes</div>
+          <div class="col">{{video.numberOfViews}} Views</div>
         </div>
     </div>
   </div>
+  <br>
   <div class="row">
     <app-comments [videoId]= "video.videoId">Loading Comments...</app-comments>
   </div>

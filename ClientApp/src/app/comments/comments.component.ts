@@ -14,6 +14,7 @@ export class CommentsComponent implements OnInit {
 
   @Input() videoId:string;
   UserComment:string;
+  liked:boolean =false;
 
   comments:CommentViewModel[]=[
     { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
@@ -49,12 +50,23 @@ export class CommentsComponent implements OnInit {
     });
   }
 
+  like(){
+    this.liked = !this.liked;
+    this.http.post<IServiceResponse>("/video/Like",{videoId:this.videoId}).subscribe(x=>{
+      if(x.status == 'good'){
+      }
+      if(x.status == 'bad'){
+      }
+    });
+  }
+
   ngOnInit() {
-    // this.isAuthenticated = this.authService.isAuthenticated() ?  true: false;
+     this.isAuthenticated = this.authService.isAuthenticated() ?  true: false;
+     console.log(this.isAuthenticated);
   }
 
   login(){
-    // this.authService.openLoginDialog().subscribe((x:any)=> this.isAuthenticated = this.authService.isAuthenticated() ?  true: false);
+   this.authService.openLoginDialog().subscribe((x:any)=> this.isAuthenticated = this.authService.isAuthenticated() ?  true: false);
 
   }
 

@@ -37,6 +37,7 @@ import { UploadComponent } from './upload/upload.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { GrowComponent } from './grow/grow.component';
 import { AvatarPickerComponent } from './avatar-picker/avatar-picker.component';
+import { UserDetailComponent } from './user-detail/user-detail.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { AvatarPickerComponent } from './avatar-picker/avatar-picker.component';
     UploadComponent,
     ForgotPasswordComponent,
     GrowComponent,
-    AvatarPickerComponent
+    AvatarPickerComponent,
+    UserDetailComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -1,15 +1,37 @@
 
  <button mat-raised-button color="primary" (click)="login()" *ngIf="!isAuthenticated">Login To Like/Comment</button>
-<form class="" ngNativeValidate (ngSubmit)="signIn()" *ngIf="isAuthenticated">
+<form class="" ngNativeValidate (ngSubmit)="comment()" *ngIf="isAuthenticated">
+  <div class=".container-fluid">
+  <div class="row">
+      <div class="col-12">
   <mat-form-field class="fullWdth">
-    <input matInput placeholder="Type your Comment Here"  [(ngModel)]="UserComment" name="UserComment" required>
+        <textarea  matInput placeholder="Type your Comment Here" rows="3"  [(ngModel)]="UserComment"  name="UserComment" required></textarea>
   </mat-form-field>
-  <div class="button-row right">
-      <button mat-raised-button color="primary" (click)="comment()">Comment</button>
+</div>
+</div>
+</div>
+
+  <div class="button-row ">
+    <div style="float:left">
+    <div class="left" (click)="like()"   *ngIf="!liked">
+      <button type="button" style="float:right;display: block;" class="right" mat-raised-button  >Like
+          <mat-icon style="color:Tomato" class="material-icons md-36" >favorite_border</mat-icon>  
+      </button>
+    </div>
+    <div  *ngIf="liked" class="left">
+        <button tabindex="-1" type="button" style="float:right;display: block;" class="right" mat-raised-button >Liked
+          <mat-icon style="color:Tomato" class="material-icons md-36" >favorite</mat-icon>  
+        </button>
+    </div>
+  </div>
+      <button style="float:right;display: block;" class="right" mat-raised-button color="primary" type="submit">Comment</button>
   </div>
   </form>
+  <br>
+  <br>
+  <br>
 
-<div>
+<div class="pad">
   <div *ngFor="let comment of comments" class="col-7 dialogbox">
    <div class="message">{{comment.commentText}}</div> 
    <div class="message right">By {{comment.userFirtName}}</div> 

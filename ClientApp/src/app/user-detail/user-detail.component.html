@@ -1,0 +1,15 @@
+<img *ngIf="user.avatarImage" [src]='user.avatarImage' name="profilePic"><br>
+<div>First Name: {{user.firstName}}</div>
+<div>Middle Name: {{user.middleName}}</div>
+<div>Last Name: {{user.lastName}}</div>
+<div>Age: {{user.age}}</div>
+<div>Gender: {{user.gender}}</div>
+<div>Town: {{user.town}}</div>
+<div>District: {{user.district}}</div>
+<div>Other Videos By {{user.firstName}}</div>
+<div class="col-md-4" (click)="goToVideo(vid)" *ngFor="let vid of videos">
+  <div class="embed-responsive embed-responsive-16by9">
+    <img class="video-fluid z-depth-1 " [src]="vid.posterUrl"/>
+  </div>
+  <div>{{vid.title}}</div>
+</div>

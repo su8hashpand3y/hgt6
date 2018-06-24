@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { AuthService } from '../auth.service';
 import { MatDialog } from '@angular/material';
 import { AvatarPickerComponent } from '../avatar-picker/avatar-picker.component';
 import { HttpClient } from '@angular/common/http';
@@ -9,6 +8,7 @@ import { ICapthaResponse } from '../ViewModels/ICapthaResponse';
 import { IServiceResponse } from '../ViewModels/IServiceResponse';
 import { ToastrService } from 'ngx-toastr';
 import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
+import { MemoryService } from '../memory.service';
 
 @Component({
   selector: 'app-register',
@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
   ];
 
   districts =['Shimla','Solan'];
-  constructor(private router: Router,private authService:AuthService, private dialog: MatDialog,private http:HttpClient,private toaster:ToastrService) {
+  constructor(private router: Router,private memory:MemoryService, private dialog: MatDialog,private http:HttpClient,private toaster:ToastrService) {
   
    }
 
@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit {
       if(x.status == 'registerd'){
         localStorage.setItem('token', x.message);
         this.toaster.info(`Thank You.You are logged in as ${this.firstName}`);
-        this.router.navigateByUrl(this.authService.getReturnUrl() || '');
+        this.router.navigateByUrl(this.memory.getReturnUrl() || '');
       }
       if(x.status == 'error'){
         this.errors = x.message;
