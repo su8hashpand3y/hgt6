@@ -10,5 +10,5 @@ userDistrict :string;
 userId:string;
 numberOfLikes:Number;
 videoId :string;
-numberOfViews:Number;
+numberOfViews : Number;
 }

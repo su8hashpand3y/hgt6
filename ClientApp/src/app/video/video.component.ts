@@ -5,8 +5,6 @@ import { Location } from '@angular/common';
 import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
 import { VideoViewModel } from '../ViewModels/videoViewModel';
 import { IServiceResponse } from '../ViewModels/IServiceResponse';
-import { IServiceResponse } from '../ViewModels/IServiceResponse';
-import { IServiceResponse } from '../ViewModels/IServiceResponse';
 
 @Component({
   selector: 'app-video',
