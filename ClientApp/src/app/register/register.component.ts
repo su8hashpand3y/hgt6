@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.http.get<IServiceTypedResponse<ICapthaResponse>>("http://localhost:54412/api/Login/getCaptha").subscribe( x => {
+    this.http.get<IServiceTypedResponse<ICapthaResponse>>("api/Login/getCaptha").subscribe( x => {
      
     console.log(x)
     if(x.status == 'ok'){
@@ -85,7 +85,7 @@ export class RegisterComponent implements OnInit {
       captha : this.captha,
     }
     
-    this.http.post<IServiceResponse>("http://localhost:54412/api/Login/Register",rvm).subscribe(x=> {
+    this.http.post<IServiceResponse>("/api/Login/Register",rvm).subscribe(x=> {
       if(x.status == 'registerd'){
         localStorage.setItem('token', x.message);
         this.toaster.info(`Thank You.You are logged in as ${this.firstName}`);
