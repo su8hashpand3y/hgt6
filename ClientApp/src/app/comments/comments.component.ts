@@ -4,6 +4,7 @@ import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
 import { CommentViewModel } from '../ViewModels/commentViewMode';
 import { IServiceResponse } from '../ViewModels/IServiceResponse';
 import { AuthService } from '../auth.service';
+import { BaseAddressService } from '../base-address.service';
 
 @Component({
   selector: 'app-comments',
@@ -13,47 +14,45 @@ import { AuthService } from '../auth.service';
 export class CommentsComponent implements OnInit {
 
   @Input() videoId:string;
+  @Input() isLikedByMe:boolean;
   UserComment:string;
   liked:boolean =false;
-
-  comments:CommentViewModel[]=[
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-    { commentText : " This is a sample comment ,this has been written long deliberitly to see what happens when some comment is spannning multiple lines Thank you",userFirtName : "user test 1"},
-  ];
+  loading:boolean=false;
+  comments:CommentViewModel[]= [];
 
   isAuthenticated:boolean;
-  constructor(private http:HttpClient,private authService:AuthService) { }
+  constructor(private http:HttpClient,private authService:AuthService,private baseAddress:BaseAddressService) { }
 
   ngOnChanges(changes: SimpleChanges){
-    let params = new HttpParams();
-    params.append('id',this.videoId);
-    this.http.get<IServiceTypedResponse<CommentViewModel[]>>('/video/GetComments',{params}).subscribe(x=>{
+    this.http.get<IServiceTypedResponse<CommentViewModel[]>>(this.baseAddress.get()+ `/Video/GetComments?id=${this.videoId}`).subscribe(x=>{
       if(x.status == 'good'){
-        //this.comments = x.message;
+        this.comments = x.message;
       }
     });
   }
 
   comment(){
-    this.http.post<IServiceResponse>('/video/Comment',{videoId:this.videoId, commentText: this.UserComment}).subscribe(x=>{
+    let data = new FormData();
+    data.append('videoId',this.videoId);
+    data.append('commentText',this.UserComment);
+    this.loading = true;
+    this.comments.unshift({ commentText:this.UserComment,userFirstName:"Me"});
+        this.UserComment = "";
+    this.http.post<IServiceResponse>(this.baseAddress.get()+'/Video/Comment',data).subscribe(x=>{
       if(x.status=='good'){
-        this.comments.unshift({ commentText:this.UserComment,userFirtName:"Me"});
+        
       }
+      this.loading= false;
     });
   }
 
   like(){
+    let data = new FormData();
+    data.append('videoId',this.videoId);
     this.liked = !this.liked;
-    this.http.post<IServiceResponse>("/video/Like",{videoId:this.videoId}).subscribe(x=>{
+    this.http.post<IServiceResponse>(this.baseAddress.get()+ "/Video/Like",data).subscribe(x=>{
       if(x.status == 'good'){
+        // output liked
       }
       if(x.status == 'bad'){
       }
@@ -61,6 +60,7 @@ export class CommentsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.liked = this.isLikedByMe;
      this.isAuthenticated = this.authService.isAuthenticated() ?  true: false;
      console.log(this.isAuthenticated);
   }

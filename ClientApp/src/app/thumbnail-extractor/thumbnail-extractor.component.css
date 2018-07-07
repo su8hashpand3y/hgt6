@@ -11,3 +11,8 @@ mat-slider {
 .centered{
   margin:auto;
 }
+
+
+.example-full-width {
+  width: 100%;
+}

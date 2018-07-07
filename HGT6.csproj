@@ -10,15 +10,16 @@
 
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>5db218f8-1c33-42b1-8f0a-b9e9b57ac96e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hash" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.0.0" />
     <PackageReference Include="AWSSDK.Core" Version="3.3.24.1" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.6" />
     <PackageReference Include="AWSSDK.S3" Version="3.3.18.4" />
-    <PackageReference Include="Hash" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>

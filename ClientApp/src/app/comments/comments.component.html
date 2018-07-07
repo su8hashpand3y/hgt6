@@ -1,11 +1,11 @@
-
+<ngx-loading [show]="loading"></ngx-loading>
  <button mat-raised-button color="primary" (click)="login()" *ngIf="!isAuthenticated">Login To Like/Comment</button>
 <form class="" ngNativeValidate (ngSubmit)="comment()" *ngIf="isAuthenticated">
   <div class=".container-fluid">
   <div class="row">
       <div class="col-12">
   <mat-form-field class="fullWdth">
-        <textarea  matInput placeholder="Type your Comment Here" rows="3"  [(ngModel)]="UserComment"  name="UserComment" required></textarea>
+        <textarea  matInput placeholder="Type your Comment Here" rows="3"   [(ngModel)]="UserComment"  name="UserComment" required></textarea>
   </mat-form-field>
 </div>
 </div>
@@ -19,12 +19,12 @@
       </button>
     </div>
     <div  *ngIf="liked" class="left">
-        <button tabindex="-1" type="button" style="float:right;display: block;" class="right" mat-raised-button >Liked
+        <button tabindex="-1" type="button" style="float:right;display: block;" class="right" mat-raised-button type="button">Liked
           <mat-icon style="color:Tomato" class="material-icons md-36" >favorite</mat-icon>  
         </button>
     </div>
   </div>
-      <button style="float:right;display: block;" class="right" mat-raised-button color="primary" type="submit">Comment</button>
+      <button style="float:right;display: block;" class="right" mat-raised-button color="primary" type="submit"  >Comment</button>
   </div>
   </form>
   <br>
@@ -34,6 +34,6 @@
 <div class="pad">
   <div *ngFor="let comment of comments" class="col-7 dialogbox">
    <div class="message">{{comment.commentText}}</div> 
-   <div class="message right">By {{comment.userFirtName}}</div> 
+   <div class="message right">By {{comment.userFirstName}}</div> 
   </div>
-</div>> 
+</div>

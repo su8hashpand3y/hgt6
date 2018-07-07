@@ -13,14 +13,15 @@ using HGT6.Helpers;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using Amazon.Runtime;
 
 namespace HGT6.Controllers
 {
-[Route("api/[controller]")]
+    [Route("api/[controller]")]
+    [Authorize]
     public class UploadController : Controller
     {
         private const string bucketName = "hgtdata";
-        private string publicadress = "https://s3.ap-south-1.amazonaws.com/hgtdata/user1/SampleVideo_1280x720_30mb.mp4";
         // Specify your bucket region (an example region is shown).
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.APSoutheast1;
         private IAmazonS3 s3Client;
@@ -38,7 +39,7 @@ namespace HGT6.Controllers
         }
 
         [HttpPost("[action]")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> UploadFileToStore(IFormFile file)
         {
             string userEmail = HttpContext.GetUserEmail();
@@ -55,6 +56,9 @@ namespace HGT6.Controllers
                         // Very immportant to check format here other anyone will upload anything
                         var uniqueID = CreateUniqueVideoID();
                         var fileAddress = $"{user.Id}_{ uniqueID}{ext}";
+                        TempVideo tv = new TempVideo { Path= $"https://s3.ap-south-1.amazonaws.com/{bucketName}/{fileAddress}" };
+                        context.TempVideo.Add(tv);
+                        context.SaveChanges();
                         return await  UploadFileAsync(file, fileAddress);
                     }
                 }
@@ -70,23 +74,29 @@ namespace HGT6.Controllers
         [HttpPost("[action]")]
         [Authorize]
         // [RequestSizeLimit(1073741823)]
-        public async Task<IActionResult> Upload(UploadInfoViewModel fileInfo)
+        public async Task<IActionResult> Upload([FromBody]UploadInfoViewModel fileInfo)
         {
             string userId = HttpContext.GetUserID();
             if (!String.IsNullOrEmpty(userId))
             {
                 try
                 {
-                        var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-                        VideoInfo videoInfo = new VideoInfo
-                        {
-                            VideoUrl = fileInfo.VideoUrl,
-                            UploadDateTime = DateTime.Now,
-                            Title = fileInfo.Title,
-                            Description = fileInfo.Description,
-                            Category = fileInfo.Category,
-                            HGTUserID = userId
-                        };
+                    var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
+
+                    if (context.Capthas.Single(x => x.Id == fileInfo.CapthaId).CapthaAnswer != fileInfo.Captha)
+                    {
+                        return Ok(new ServiceResponse { Status = "error", Message = "Captha Answer not Matched" });
+                    }
+
+                    VideoInfo videoInfo = new VideoInfo
+                    {
+                        VideoUrl = fileInfo.VideoUrl,
+                        UploadDateTime = DateTime.Now,
+                        Title = fileInfo.Title,
+                        Description = fileInfo.Description,
+                        Category = fileInfo.Category,
+                        HGTUserID = userId
+                    };
 
                     if (!String.IsNullOrEmpty(fileInfo.PosterUrl))
                     {
@@ -94,14 +104,21 @@ namespace HGT6.Controllers
                         var base64Image = fileInfo.PosterUrl.Substring(startIndex + 7);
                         var index1 = fileInfo.PosterUrl.IndexOf('/');
                         var index2 = fileInfo.PosterUrl.IndexOf(';');
-                        var ext = fileInfo.PosterUrl.Substring(index1+1, index2 - index1-1);
-                        string path = $"{fileInfo}.{ext}";
+                        var ext = fileInfo.PosterUrl.Substring(index1 + 1, index2 - index1 - 1);
+                        var uniqueID = CreateUniqueVideoID();
+                        var path = $"{userId}_{ uniqueID}.{ext}";
                         await this.UploadFileAsync(Convert.FromBase64String(base64Image), path);
-                        videoInfo.PosterUrl  = path;
+                        videoInfo.PosterUrl = $"https://s3.ap-south-1.amazonaws.com/{bucketName}/{path}";
                     }
-                        context.Videos.Add(videoInfo);
-                        await context.SaveChangesAsync();
-                        return Ok(new ServiceResponse { Status = "success", Message = videoInfo.ID.ToString() });
+                    context.Videos.Add(videoInfo);
+                    var tv = context.TempVideo.FirstOrDefault(x => x.Path == fileInfo.VideoUrl);
+                    if (tv != null)
+                    {
+                        context.TempVideo.Remove(tv);
+                    }
+
+                    await context.SaveChangesAsync();
+                    return Ok(new ServiceResponse { Status = "success", Message = videoInfo.ID.ToString() });
                 }
                 catch
                 {
@@ -156,9 +173,11 @@ namespace HGT6.Controllers
                     CannedACL = S3CannedACL.PublicRead
                 };
 
+                //fileTransferUtilityRequest.UploadProgressEvent += FileTransferUtilityRequest_UploadProgressEvent;
+
 
                 await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
-                return Ok(new ServiceResponse { Status = "success", Message = keyName });
+                return Ok(new ServiceResponse { Status = "success", Message = $"https://s3.ap-south-1.amazonaws.com/{bucketName}/{keyName}" });
             }
             catch (Exception e)
             {
@@ -166,6 +185,11 @@ namespace HGT6.Controllers
                 return Ok(new ServiceResponse { Status = "error", Message = "Something Went Wrong When Uploading The File" });
             }
 
+        }
+
+        private void FileTransferUtilityRequest_UploadProgressEvent(object sender, UploadProgressArgs e)
+        {
+            HttpContext.Response.WriteAsync(e.PercentDone.ToString());
         }
 
         private string CreateUniqueVideoID()

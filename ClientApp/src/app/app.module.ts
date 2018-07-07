@@ -25,7 +25,7 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ThumbnailExtractorComponent } from './thumbnail-extractor/thumbnail-extractor.component';
 import { ErrorsHandler } from './ErrorsHandler';
-import { ServerErrorsInterceptor } from './ServerErrorsInterceptor';
+import { TokenInterceptor } from './TokenInterceptor';
 import { VideoComponent } from './video/video.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ErrorComponent } from './error/error.component';
@@ -38,6 +38,9 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { GrowComponent } from './grow/grow.component';
 import { AvatarPickerComponent } from './avatar-picker/avatar-picker.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { SearchResultComponent } from './search-result/search-result.component';
+
+let dummyDialogRef = { close: () => {}}
 
 @NgModule({
   declarations: [
@@ -56,7 +59,8 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
     ForgotPasswordComponent,
     GrowComponent,
     AvatarPickerComponent,
-    UserDetailComponent
+    UserDetailComponent,
+    SearchResultComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -72,8 +76,10 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
       { path: 'Register', component: RegisterComponent },
       { path: 'ForgotPassword', component: ForgotPasswordComponent },
       { path: 'Grow', component: GrowComponent },
+      { path: 'Search/:id', component: SearchResultComponent },
       { path: 'thumb', component: ThumbnailExtractorComponent },
       { path: 'video/:id', component: VideoComponent },
+      { path: 'user/:id', component: UserDetailComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'error', component: ErrorComponent },
       { path: 'comment', component: CommentsComponent }
@@ -106,10 +112,10 @@ import { UserDetailComponent } from './user-detail/user-detail.component';
   },
   {
     provide: HTTP_INTERCEPTORS,
-    useClass: ServerErrorsInterceptor,
+    useClass: TokenInterceptor,
     multi: true,
   },
-  { provide: MatDialogRef, useValue: {} }],
+  { provide: MatDialogRef, useValue: dummyDialogRef }],
   bootstrap: [AppComponent],
   entryComponents: [LoginComponent,AvatarPickerComponent]
 })

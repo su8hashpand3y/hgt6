@@ -12,7 +12,7 @@ namespace HGT6.Models
         public string Category { get; set; }
         public string VideoUrl { get; set; }
         public string PosterUrl { get; set; }
-        public bool IsReviewed { get; set; }
+        public bool? IsReviewed { get; set; }
         public DateTime UploadDateTime { get; set; }
         public long Likes { get; set; }
         public long Comments { get; set; }

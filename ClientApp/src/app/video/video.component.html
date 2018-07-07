@@ -1,25 +1,30 @@
 <ngx-loading [show]="loading"></ngx-loading>
-<div class="container">
+<br>
+<div class="container" *ngIf="video?.videoId">
   <div class="row">
-      <div>{{video.title}} </div>
     <div class="col-md-12">
       <div class="embed-responsive embed-responsive-16by9">
         <video class="video-fluid z-depth-1 "  controls>
           <source [src]="video.videoUrl" type="video/mp4" />
         </video>
       </div>
+      <div style="margin: auto" ><b>{{video.title}}</b> </div>
       
-      <div (click)="gotoUser(video.userId)">Uploaded By {{video.userFirstName}} {{ video.userLastName }} FROM {{video.userTown}},{{video.userDistrict}} </div><br>
-      <div>{{video.description}} </div>
+      <div (click)="gotoUser(video.userId)">Uploaded by <b>{{video.userFirstName}} </b> {{ video.userLastName }} from {{video.userTown}}, {{video.userDistrict}} </div><br>
 
       <div class="row">
-          <div class="col">{{video.numberOfLikes}} Likes</div>
-          <div class="col">{{video.numberOfViews}} Views</div>
+          <div class="col"><b> {{video.numberOfLikes}} Likes </b></div>
+          <div class="col"><b>{{video.numberOfViews}} Views</b></div>
         </div>
+        <div>Description: {{video.description}} </div>
+        <button (click)="report(video.videoId)" *ngIf="!reported">Report this video</button>
+
     </div>
+
+
   </div>
   <br>
-  <div class="row">
-    <app-comments [videoId]= "video.videoId">Loading Comments...</app-comments>
+  <div class="">
+    <app-comments *ngIf="video?.videoId" [videoId]= "video.videoId" [isLikedByMe]="video.isLikedByMe">Loading Comments...</app-comments>
   </div>
   </div>

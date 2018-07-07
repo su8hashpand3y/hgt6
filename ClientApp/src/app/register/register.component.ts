@@ -9,6 +9,7 @@ import { IServiceResponse } from '../ViewModels/IServiceResponse';
 import { ToastrService } from 'ngx-toastr';
 import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
 import { MemoryService } from '../memory.service';
+import { BaseAddressService } from '../base-address.service';
 
 @Component({
   selector: 'app-register',
@@ -40,13 +41,13 @@ export class RegisterComponent implements OnInit {
     'Other',
   ];
 
-  districts =['Shimla','Solan'];
-  constructor(private router: Router,private memory:MemoryService, private dialog: MatDialog,private http:HttpClient,private toaster:ToastrService) {
+  districts =['Bilaspur','Chamba','Hamirpur','kangra','Kinnaur','Kullu','Lahaul and Spiti','Mandi','Shimla','Sirmaur','Solan','Una'];
+  constructor(private router: Router,private memory:MemoryService, private dialog: MatDialog,private http:HttpClient,private toaster:ToastrService,private baseAddress:BaseAddressService) {
   
    }
 
   ngOnInit() {
-    this.http.get<IServiceTypedResponse<ICapthaResponse>>("api/Login/getCaptha").subscribe( x => {
+    this.http.get<IServiceTypedResponse<ICapthaResponse>>(this.baseAddress.get() +"/api/Login/getCaptha").subscribe( x => {
      
     console.log(x)
     if(x.status == 'ok'){
@@ -54,7 +55,7 @@ export class RegisterComponent implements OnInit {
       this.capthaText = x.message.capthaText;
     }
     if(x.status == 'error'){
-      this.errors = 'Please Referesh Page,Somthing gone wrong in caotha Generation';
+      this.errors = 'Please Referesh Page,Somthing gone wrong in captha Generation';
     }
   });
 }
@@ -69,6 +70,10 @@ export class RegisterComponent implements OnInit {
 
 
   register(){
+
+
+    console.log("Registering");
+    
     this.loading=true;
       let rvm : RegisterViewModel= {
       email : this.email,
@@ -85,7 +90,7 @@ export class RegisterComponent implements OnInit {
       captha : this.captha,
     }
     
-    this.http.post<IServiceResponse>("/api/Login/Register",rvm).subscribe(x=> {
+    this.http.post<IServiceResponse>(this.baseAddress.get() +"/api/Login/Register",rvm).subscribe(x=> {
       if(x.status == 'registerd'){
         localStorage.setItem('token', x.message);
         this.toaster.info(`Thank You.You are logged in as ${this.firstName}`);

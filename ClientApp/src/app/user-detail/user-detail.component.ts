@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
 import { VideoViewModel } from '../ViewModels/videoViewModel';
 import { RegisterViewModel } from '../ViewModels/registerViewModel';
+import { BaseAddressService } from '../base-address.service';
 
 @Component({
   selector: 'app-user-detail',
@@ -17,30 +18,26 @@ export class UserDetailComponent implements OnInit {
   videos: VideoViewModel[]= [];
 
 
-  constructor(private route: ActivatedRoute, private http: HttpClient,private router:Router){}
+  constructor(private route: ActivatedRoute, private http: HttpClient,private router:Router,private baseAddress:BaseAddressService){}
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      this.id = params['id'];
-      console.log(params);
-      this.http.get<IServiceTypedResponse<RegisterViewModel>>("/userDetail/GetUser",{params}).subscribe(x=>{
+       this.id = this.route.snapshot.params['id'];  
+      this.http.get<IServiceTypedResponse<RegisterViewModel>>(this.baseAddress.get()+"/userDetail/GetUser",{params:this.route.snapshot.params}).subscribe(x=>{
+        console.log(x);
         if(x.status == 'good'){
                this.user = x.message;
+               this.getUsersVideo();
         }
         if(x.status == 'bad'){
 
         }
       })
-    });
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   getUsersVideo(){
-    let params = new HttpParams();
-    params.append('id',this.id.toString());
-    this.http.get<IServiceTypedResponse<VideoViewModel[]>>("/userDetail/GetUserVideo",{params}).subscribe(x=>{
+    this.http.get<IServiceTypedResponse<VideoViewModel[]>>(this.baseAddress.get()+"/userDetail/GetUserVideo",{params: this.route.snapshot.params}).subscribe(x=>{
       if(x.status == 'good'){
              this.videos = x.message;
       }

@@ -11,11 +11,13 @@ export class UploadComponent implements OnInit {
   constructor(private authService:AuthService) { }
   isAuthenticated:boolean= false;
   ngOnInit() {
+    this.isAuthenticated = this.authService.isAuthenticated() ? true : false;
   }
 
   Login(){
-    this.authService.openLoginDialog();
+    this.authService.openLoginDialog().subscribe(x=>{
     this.isAuthenticated = this.authService.isAuthenticated() ? true : false;
+    });
   }
 
 }

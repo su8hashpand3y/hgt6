@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { IServiceResponse } from '../ViewModels/IServiceResponse';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { BaseAddressService } from '../base-address.service';
+import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
+import { ICapthaResponse } from '../ViewModels/ICapthaResponse';
 
 
 @Component({
@@ -14,8 +17,6 @@ import { ToastrService } from 'ngx-toastr';
 export class ThumbnailExtractorComponent implements OnInit,Iloader {
 
   loading:boolean = false;
-  videoLocalPath: string = "https://s3.ap-south-1.amazonaws.com/hgtdata/e8b117af-de0c-4791-889d-75a3cd0b2616_201866161557.mp4";
-
   w:any;
   h:any;
   context:any;
@@ -25,23 +26,38 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
   @ViewChild('canvas') canvasElement:ElementRef;
 
 
+  capthaId:Number;
+  capthaText:string
+  captha:string;
+
   videoUrl:string;
   name:string;
   description:string;
   category:string;
   posterUrl:string;
-  categories:string[] = ['music','comedy','other'];
+  categories:string[] = ['Film & Animation','Autos & Vehicles','Music','Pets & Animals','Sports','Travel & Events','Gaming','People & Blogs','Comedy','Entertainment','News & Politics','How-to & Style','Education','Science & Technology','Non-profits & Activism','OTHER'];
  
   max:Number;
   loadedToStore:boolean= false;
   errors:string;
 
-  constructor(private http:HttpClient,private router:Router,private toast:ToastrService) { }
+  constructor(private http:HttpClient,private router:Router,private toast:ToastrService,private baseAddress:BaseAddressService) { }
 
   ngOnInit() {
     this.video = this.videoElement.nativeElement as HTMLVideoElement;
     this.canvas = this.canvasElement.nativeElement as HTMLCanvasElement;
-		this.context = this.canvas.getContext('2d');
+    this.context = this.canvas.getContext('2d');
+    this.http.get<IServiceTypedResponse<ICapthaResponse>>(this.baseAddress.get() +"/api/Login/getCaptha").subscribe( x => {
+     
+      console.log(x)
+      if(x.status == 'ok'){
+        this.capthaId = x.message.capthaId;
+        this.capthaText = x.message.capthaText;
+      }
+      if(x.status == 'error'){
+        this.errors = 'Please Referesh Page,Somthing gone wrong in captha Generation';
+      }
+    });
   }
 
   cancel(){
@@ -77,16 +93,19 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
     var file = event.target.files[0];
     console.log(file);
     if(file){
-      if(file.size > 1048576 * 24){
+      if(file.size > 1048576 * 500){
         //greater than 500 MB
-        this.errors = "We dont support Big File"
+        this.errors = "We dont support Big(> 500 MB) File"
         console.log("File is too Big");
+        return;
       }
       // upload the video and show a loader till it is uploaded
        this.loading = true;
        let formData: FormData = new FormData();
        formData.append('file', file, file.name);
-       this.http.post<IServiceResponse>("/api/Upload/UploadFileToStore",formData).subscribe(x=>{
+       console.log("uploading to server")
+       this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/UploadFileToStore",formData).subscribe(x=>{
+         console.log(x);
          if(x.status =='success'){
            this.videoUrl=x.message; 
            this.loadedToStore = true;
@@ -116,18 +135,21 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
     
 
     upload() {
-              this.http.post<IServiceResponse>("/api/Upload/upload", {
-                name:this.name,
+              this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/upload", {
+                title:this.name,
                 description:this.description,
                 category:this.category,
                 videoUrl:this.videoUrl,
-                posterUrl:this.posterUrl
+                posterUrl:this.posterUrl,
+                capthaId : this.capthaId,
+                captha : this.captha,
               })
                   .subscribe(
                   x => {
+                    console.log(x);
                       if(x.status == 'success'){
                       this.toast.success(`Your video ${this.name} was uploaded successfully.`);
-                      this.router.navigateByUrl(`/Video/${x.message}`);
+                      this.router.navigateByUrl(`/video/${x.message}`);
                    }
                    
                    if(x.status == 'error'){

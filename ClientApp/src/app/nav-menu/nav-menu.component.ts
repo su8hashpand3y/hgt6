@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-menu',
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
 })
 export class NavMenuComponent {
   isExpanded = false;
+  searchTerm:string;
+  constructor(private router:Router){}
 
   collapse() {
     this.isExpanded = false;
@@ -19,5 +22,10 @@ export class NavMenuComponent {
   logout(){
     localStorage.removeItem('token');
     console.log("Log Out");
+  }
+
+  search()
+  {
+    this.router.navigate(['Search',this.searchTerm]);
   }
 }

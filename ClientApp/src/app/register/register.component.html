@@ -12,6 +12,7 @@
         <span  *ngIf="avatarImage" name="changePic">Pick another Profile Pic</span> 
     </button>
     <br>
+    <br>
 
      <mat-form-field class="example-full-width">
        <input matInput placeholder="Email" type="email"  [(ngModel)]="email" name="email" required>
@@ -58,8 +59,8 @@
             </mat-form-field>
  
      <div class="button-row">
-       <button mat-button (click)="cancel()">Cancel</button>
-       <button mat-raised-button color="primary" type="submit">Register</button>
+       <button mat-button type="button" (click)="cancel()">Cancel</button>
+       <button mat-raised-button color="primary" >Register</button>
        </div>
        <span *ngIf="errors">{{errors}}</span>
    </form>

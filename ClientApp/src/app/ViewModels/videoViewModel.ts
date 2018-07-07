@@ -11,4 +11,5 @@ userId:string;
 numberOfLikes:Number;
 videoId :string;
 numberOfViews : Number;
+isLikedByMe:Boolean;
 }

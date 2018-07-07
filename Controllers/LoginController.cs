@@ -16,6 +16,7 @@ using Amazon.S3;
 using System.Threading.Tasks;
 using Amazon.S3.Transfer;
 using System.IO;
+using HGT6.Helpers;
 
 namespace HGT6.Controllers
 {
@@ -23,18 +24,20 @@ namespace HGT6.Controllers
   [Route("api/[controller]")]
     public class LoginController : Controller
     {
-        private const string bucketName = "hgtdata2";
+        private const string bucketName = "hgtdata";
         // Specify your bucket region (an example region is shown).
         private static readonly RegionEndpoint bucketRegion = RegionEndpoint.APSoutheast1;
         private IAmazonS3 s3Client;
         private IConfiguration Configuration { get; }
         private IServiceProvider services { get; }
+        private IEmailSender emailSender { get; }
 
-        public LoginController(IAmazonS3 s3Client, IConfiguration configuration, IServiceProvider services)
+        public LoginController(IAmazonS3 s3Client, IConfiguration configuration, IServiceProvider services, IEmailSender emailSender)
         {
             Configuration = configuration;
             this.services = services;
             this.s3Client = s3Client;
+            this.emailSender = emailSender;
         }
 
         private async Task<bool> UploadFileAsync(byte[] file, string keyName)
@@ -92,7 +95,7 @@ namespace HGT6.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Register([FromBody]RegisterViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -240,6 +243,61 @@ namespace HGT6.Controllers
             {
                 return RedirectToAction(nameof(MainController), "Main");
             }
+        }
+
+        public class PassReset
+        {
+            public string Email { get; set; }
+            public string Code { get; set; }
+            public string Password { get; set; }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public IActionResult PasswordResetEmail([FromBody]PassReset passReset)
+        {
+            var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
+            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email == passReset.Email);
+            if (foundUser == null)
+                return Ok(new ServiceResponse { Status = "error", Message = "User not found!" });
+
+            var rand = new Random();
+            if(DateTime.Now -  foundUser.LastPassowrdResetTime < TimeSpan.FromHours(5))
+            {
+                return Ok(new ServiceResponse { Status = "error", Message = "You Have to wait 5 hours before requesting new password reset code since your last request" });
+            }
+            foundUser.VerificationCode = rand.Next(1000, 9999).ToString();
+            context.SaveChanges();
+            if (this.emailSender.SendMail(passReset.Email, "Code To Reset Your Password", $"The code to reset your password is {foundUser.VerificationCode}"))
+            {
+                return Ok(new ServiceResponse { Status = "good", Message = "We have mailed you code to reset your password" });
+            }
+
+            return Ok(new ServiceResponse { Status = "error", Message = "Error in sending mail" });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("[action]")]
+        public IActionResult PasswordReset([FromBody]PassReset passReset)
+        {
+            var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
+            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email == passReset.Email);
+            if (foundUser == null)
+                return Ok(new ServiceResponse { Status = "error", Message = "User not found!" });
+
+            if (foundUser.VerificationCode != passReset.Code)
+            {
+                return Ok(new ServiceResponse { Status = "error", Message = "Wrong Code" });
+            }
+
+            var hasher = new Hasher();
+            var hashedPassword = hasher.HashPassword(passReset.Password);
+            foundUser.PasswordHash = hashedPassword.Hash;
+            foundUser.Salt = hashedPassword.Salt;
+            foundUser.VerificationCode = "Not available";
+            foundUser.LastPassowrdResetTime = DateTime.Now;
+            context.SaveChanges();
+            return Ok(new ServiceResponse { Status = "good", Message = "Password Reset Successful" });
         }
     }
 }

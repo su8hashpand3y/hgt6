@@ -11,9 +11,10 @@ using System;
 namespace HGT6.Migrations
 {
     [DbContext(typeof(HGTDbContext))]
-    partial class HGTDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180705044753_ji")]
+    partial class ji
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,18 +57,6 @@ namespace HGT6.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("HGT6.Models.Feedback", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Message");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Feedbacks");
-                });
-
             modelBuilder.Entity("HGT6.Models.HGTUser", b =>
                 {
                     b.Property<string>("Id")
@@ -102,8 +91,6 @@ namespace HGT6.Migrations
                     b.Property<bool>("IsVerified");
 
                     b.Property<string>("LastName");
-
-                    b.Property<DateTime>("LastPassowrdResetTime");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -198,7 +185,7 @@ namespace HGT6.Migrations
 
                     b.Property<bool>("IsFeatured");
 
-                    b.Property<bool?>("IsReviewed");
+                    b.Property<bool>("IsReviewed");
 
                     b.Property<bool>("IsUploaded");
 

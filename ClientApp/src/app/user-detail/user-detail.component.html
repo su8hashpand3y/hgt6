@@ -1,15 +1,35 @@
-<img *ngIf="user.avatarImage" [src]='user.avatarImage' name="profilePic"><br>
-<div>First Name: {{user.firstName}}</div>
-<div>Middle Name: {{user.middleName}}</div>
-<div>Last Name: {{user.lastName}}</div>
-<div>Age: {{user.age}}</div>
-<div>Gender: {{user.gender}}</div>
-<div>Town: {{user.town}}</div>
-<div>District: {{user.district}}</div>
+<br>
+<br>
+
+
+<div  *ngIf="user" >
+    <div class="container">
+        <div class="row">
+<img *ngIf="user.avatarImage" [src]='user.avatarImage'  name="profilePic" class="col-md-2"><br>
+<div class="col-md-10">
+<div>First Name: <b>{{user.firstName}}</b></div>
+<div>Last Name: <b>{{user.lastName}}</b></div>
+<div>Age: <b>{{user.age}}</b></div>
+<div>Gender: <b>{{user.gender}}</b></div>
+<div>Town: <b>{{user.town}}</b></div>
+<div>District: <b>{{user.district}}</b></div>
+</div>
+<br>
+
 <div>Other Videos By {{user.firstName}}</div>
-<div class="col-md-4" (click)="goToVideo(vid)" *ngFor="let vid of videos">
-  <div class="embed-responsive embed-responsive-16by9">
-    <img class="video-fluid z-depth-1 " [src]="vid.posterUrl"/>
-  </div>
+</div>
+</div>
+<br>
+
+<div class="container">
+  <div class="row">
+<div class="col-md-4" (click)="goToVideo(vid)" *ngFor="let vid of videos" style="padding: 2px">
+  <div class="embed-responsive1 embed-responsive-16by91">
+    <img class="video-fluid1 z-depth-1 " [src]="vid.posterUrl"/>
+ 
   <div>{{vid.title}}</div>
+</div>
+</div>
+</div>
+</div>
 </div>

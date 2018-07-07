@@ -16,18 +16,22 @@ namespace HGT6.ViewModels
 
         [Required]
         public string FirstName { get; set; }
-        public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string AvatarImage { get; set; }
         public int CapthaId { get; set; }
+        [Required]
         public string Captha { get; set; }
 
+        [Required]
         public string Gender { get; set; }
 
+        [Required]
         public string District { get; set; }
 
+        [Required]
         public string Town { get; set; }
 
+        [Required]
         public int Age { get; set; }
     }
 }

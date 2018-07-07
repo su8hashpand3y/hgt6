@@ -24,5 +24,6 @@ namespace HGT6.ViewModels
         public long NumberOfLikes { get; set; }
         public long NumberOfComments { get; set; }
         public long NumberOfViews { get; set; }
+        public bool IsLikedByMe { get; set; }
     }
 }

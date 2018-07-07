@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
 import { VideoViewModel } from '../ViewModels/videoViewModel';
 import { IServiceResponse } from '../ViewModels/IServiceResponse';
+import { BaseAddressService } from '../base-address.service';
 
 @Component({
   selector: 'app-video',
@@ -15,38 +16,46 @@ export class VideoComponent implements OnInit {
 
   id: number;
   private sub: any;
-  video: VideoViewModel ={numberOfLikes:1,numberOfViews:1, description:"",title:"",userDistrict:"",userFirstName:"",userId:"",userLastName:"",userTown:"", videoId:"",videoUrl:"https://s3.ap-south-1.amazonaws.com/hgtdata/e8b117af-de0c-4791-889d-75a3cd0b2616_20186616435.mp4",posterUrl:""};
+  video: VideoViewModel;
   loading: boolean;
-  constructor(private route: ActivatedRoute, private http: HttpClient, private location: Location,private router:Router) { }
+  reported:boolean= false;
+  constructor(private route: ActivatedRoute, private http: HttpClient, private location: Location,private router:Router,private baseAddress:BaseAddressService) { }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      this.id = params['id'];
-      console.log(params);
-      this.http.get<IServiceTypedResponse<VideoViewModel>>("/video/GetVideo",{params}).subscribe(x=>{
-        if(x.status == 'good'){
-               this.video = x.message;
-        }
-        if(x.status == 'bad'){
+    this.loading= true;
+    this.id = this.route.snapshot.params['id'];
+    this.http.get<IServiceTypedResponse<VideoViewModel>>(this.baseAddress.get()+"/video/GetVideo",{params:this.route.snapshot.params}).subscribe(x=>{
+      console.log(x);
+      
+      if(x.status == 'good'){
+             console.log(x.message)
+             this.video = x.message;
+      }
+      if(x.status == 'bad'){
 
-        }
-        this.loading= false;
-      })
+      }
+      this.loading= false;
     });
   }
 
+  report(id){
+    this.reported = true;
+    let data = new FormData();
+    data.append('videoId',id);
+    this.http.post(this.baseAddress.get()+"/video/ReportVideo",data).subscribe(x=>console.log("video reported successfuly"));
+  }
+
   ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   gotoUser(userId){
-    this.router.navigate(['video', userId]);
+    this.router.navigate(['user', userId]);
   }
 
   like(){
     this.sub = this.route.params.subscribe(params => {
     this.id = params['id'];
-    this.http.get<IServiceResponse>("/video/Like",{params}).subscribe(x=>{
+    this.http.get<IServiceResponse>(this.baseAddress.get()+"/video/Like",{params}).subscribe(x=>{
       if(x.status == 'good'){
       }
       if(x.status == 'bad'){

@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { VideoViewModel } from '../ViewModels/videoViewModel';
 import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
+import { BaseAddressService } from '../base-address.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,7 @@ import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
   styleUrls:['./home.component.css']
 })
 export class HomeComponent {
-  constructor(private toastr: ToastrService, private router: Router,private route: ActivatedRoute,private http:HttpClient) { }
+  constructor(private toastr: ToastrService, private router: Router,private route: ActivatedRoute,private http:HttpClient,private baseAddress:BaseAddressService) { }
 
   goToVideo(vid) {
      this.router.navigate(['video', vid.videoId]);
@@ -26,25 +27,34 @@ export class HomeComponent {
 
   videos: VideoViewModel[]= [];
   onScroll() {
+    console.log("fetching next 10");
     this.fetchVideos(10);
   }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      this.route.url.subscribe(x=>this.whatType = x && x[0] && x[0].path);
-      this.fetchVideos();
-    });
+
+    this.http.get(this.baseAddress.get() +"/Main/GetVideoList").subscribe(x=>console.log(x));
+    console.log("paramters are")
+    console.log(this.route.snapshot.params)
+    this.whatType =  this.route.snapshot.params[0];
+    this.fetchVideos();
+    // this.sub = this.route.params.subscribe(params => {
+    //   this.route.url.subscribe(x=>this.whatType = x && x[0] && x[0].path);
+    //   this.fetchVideos();
+    // });
   }
 
   fetchVideos(take?:Number){
-    let params = new HttpParams();
-    params.set("type",this.whatType);
-    params.set("skip",this.videos.length.toString());
-    if(take){
-    params.set("take",take.toString());
-    }
 
-    this.http.get<IServiceTypedResponse<VideoViewModel[]>>(`/Main/GetVideoList`,{ params}).subscribe(x=>
+    let query = `?type=${this.whatType}&skip=${this.videos.length.toString()}`;
+   
+   if(take){
+     query+=`&take=${take.toString()}`;
+   }
+   
+
+    console.log(this.baseAddress.get());
+    this.http.get<IServiceTypedResponse<VideoViewModel[]>>(this.baseAddress.get() + `/Main/GetVideoList${query}`).subscribe(x=>
       {
         if(x.status == "good")
         {
@@ -61,7 +71,6 @@ export class HomeComponent {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
 }

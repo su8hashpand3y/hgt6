@@ -10,6 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon;
+using Amazon.Runtime;
 
 namespace HGT6
 {
@@ -18,7 +22,15 @@ namespace HGT6
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConfigurationRoot = new ConfigurationBuilder()
+               .SetBasePath(Directory.GetCurrentDirectory())
+               .AddJsonFile("appsettings.json")
+               .AddEnvironmentVariables()
+               .Build();
         }
+
+        public IConfigurationRoot ConfigurationRoot { get; }
+
 
         public IConfiguration Configuration { get; }
 
@@ -45,7 +57,6 @@ namespace HGT6
         });
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddCors();
             services.AddMvc();
 
@@ -55,7 +66,10 @@ namespace HGT6
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddDefaultAWSOptions(ConfigurationRoot.GetAWSOptions());
+            //AWSOptions awsOption = new AWSOptions();
+            //awsOption.Region = RegionEndpoint.APSoutheast1;
+            //awsOption.Credentials = new AWSCredentials();
             services.AddAWSService<IAmazonS3>();
 
 
@@ -89,18 +103,18 @@ namespace HGT6
             });
 
 
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
+            //app.UseSpa(spa =>
+            //{
+            //    // To learn more about options for serving an Angular SPA from ASP.NET Core,
+            //    // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "ClientApp";
+            //    spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
+            //    if (env.IsDevelopment())
+            //    {
+            //        spa.UseAngularCliServer(npmScript: "start");
+            //    }
+            //});
         }
     }
 }

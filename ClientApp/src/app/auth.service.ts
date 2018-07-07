@@ -17,7 +17,7 @@ export class AuthService {
 
   isAuthenticated() {
       let token = localStorage.getItem('token');
-      return true;
+      return token;
   }
 
 //   login(user: { email: string, password: string }) {
