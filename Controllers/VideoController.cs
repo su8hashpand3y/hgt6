@@ -78,7 +78,7 @@ public class VideoController : Controller
         {
             var result = new List<CommentViewModel>();
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-            var comments = context.Comments.Include(x=>x.HGTUser).Where(x => x.VideoId == id).OrderByDescending(x=>x.ID).ToList();
+            var comments = context.Comments.Include(x => x.HGTUser).Where(x => x.VideoId == id && x.IsDeleted != false).OrderByDescending(x=>x.ID).ToList();
             comments.ForEach(x => result.Add(new CommentViewModel { CommentText= x.CommentText,UserFirstName= x.HGTUser?.FirstName }));
             return Ok(new ServiceTypedResponse<List<CommentViewModel>> { Status = "good", Message = result });
         }
@@ -118,6 +118,22 @@ public class VideoController : Controller
                 likedVideo.Comments++;
                 var comment = new Comment { VideoId = VideoId, HGTUserID = HttpContext.GetUserID(), CommentText = CommentText };
                 context.Comments.Add(comment);
+                context.SaveChanges();
+                return Ok(comment);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DelComment(long commentId)
+        {
+            var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
+            var comment = context.Comments.FirstOrDefault(x => x.ID == commentId);
+            if (comment != null)
+            {
+                comment.IsDeleted = true;
                 context.SaveChanges();
                 return Ok(comment);
             }

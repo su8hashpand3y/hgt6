@@ -266,6 +266,11 @@ namespace HGT6.Controllers
             {
                 return Ok(new ServiceResponse { Status = "error", Message = "You Have to wait 5 hours before requesting new password reset code since your last request" });
             }
+            if(foundUser.VerificationCode != "Not available")
+            {
+                return Ok(new ServiceResponse { Status = "error", Message = "Code Already sent to your email." });
+            }
+
             foundUser.VerificationCode = rand.Next(1000, 9999).ToString();
             context.SaveChanges();
             if (this.emailSender.SendMail(passReset.Email, "Code To Reset Your Password", $"The code to reset your password is {foundUser.VerificationCode}"))

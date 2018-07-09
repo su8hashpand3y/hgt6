@@ -32,6 +32,10 @@ export class RegisterComponent implements OnInit {
   capthaId:Number;
   capthaText:string
   captha:string;
+  
+  confirmPassword:string;
+  confirmEmail:string;
+
 
   errors:string;
 
@@ -70,7 +74,16 @@ export class RegisterComponent implements OnInit {
 
 
   register(){
+   this.errors = "";
+    if(this.email !== this.confirmEmail){
+          this.errors = "Email Dont Match";
+          return;
+    }
 
+    if(this.password !== this.confirmPassword){
+      this.errors = "Password Dont Match";
+      return;
+}
 
     console.log("Registering");
     

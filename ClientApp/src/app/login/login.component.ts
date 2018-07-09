@@ -17,6 +17,7 @@ export class LoginComponent  {
   email: string="";
   password: string="";
   loading:boolean = false;
+  errors:string;
   constructor(private memory:MemoryService, private router:Router, private toast: ToastrService, private http: HttpClient, public dialogRef: MatDialogRef<LoginComponent>,private baseAddress:BaseAddressService ) { }
 
   signOut() {

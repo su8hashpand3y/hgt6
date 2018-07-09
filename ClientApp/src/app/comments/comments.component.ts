@@ -31,6 +31,19 @@ export class CommentsComponent implements OnInit {
     });
   }
 
+  deleteComment(comment){
+    this.loading= true;
+    let data = new FormData();
+    data.append('id',comment.id);
+    this.http.post<IServiceResponse>(this.baseAddress.get()+'/Video/DelComment',data).subscribe(x=>{
+         this.loading= false;
+        var index = this.comments.indexOf(comment);
+            if (index > -1) {
+              this.comments.splice(index, 1);
+      }
+    });
+  }
+
   comment(){
     let data = new FormData();
     data.append('videoId',this.videoId);

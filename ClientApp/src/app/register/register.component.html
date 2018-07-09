@@ -18,6 +18,9 @@
        <input matInput placeholder="Email" type="email"  [(ngModel)]="email" name="email" required>
      </mat-form-field>
      <mat-form-field class="example-full-width">
+        <input matInput placeholder="Confirm Email" type="email"  [(ngModel)]="confirmEmail" name="confirmEmail" required>
+      </mat-form-field>
+     <mat-form-field class="example-full-width">
         <input matInput placeholder="First Name"  [(ngModel)]="firstName" name="firstName" required>
       </mat-form-field>
       <mat-form-field class="example-full-width">
@@ -34,6 +37,11 @@
      <mat-form-field class="example-full-width">
        <input matInput placeholder="Password" type="password" [(ngModel)]="password" name="password" required>
      </mat-form-field>
+
+     <mat-form-field class="example-full-width">
+        <input matInput placeholder="Confirm Password" type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+      </mat-form-field>
+ 
 
      <div class="example-selected-value">Gender</div>
      <mat-radio-group class="example-radio-group" [(ngModel)]="gender" name="gender" required>
@@ -53,14 +61,14 @@
           </mat-form-field>
 
           <input [(ngModel)]="capthaId" name="capthaId" hidden/>
-        <div class="example-selected-value">Prove You are Human Type {{capthaText}} below</div>
+        <div class="example-selected-value">Prove You are Human, type <b>{{capthaText}}</b> below</div>
           <mat-form-field class="example-full-width">
               <input matInput  type="captha"  [(ngModel)]="captha" name="captha" required>
             </mat-form-field>
  
      <div class="button-row">
        <button mat-button type="button" (click)="cancel()">Cancel</button>
+       <span style="color: crimson" *ngIf="errors">  {{errors}}  </span>
        <button mat-raised-button color="primary" >Register</button>
        </div>
-       <span *ngIf="errors">{{errors}}</span>
    </form>

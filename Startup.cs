@@ -14,6 +14,9 @@ using System.IO;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon;
 using Amazon.Runtime;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace HGT6
 {
@@ -37,8 +40,13 @@ namespace HGT6
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-             services.AddDbContext<HGTDbContext>(options => 
-             options.UseSqlServer(Configuration.GetConnectionString("HGTDB")));
+            var MYPS = $"User ID=hgtadmin;Password={Environment.GetEnvironmentVariable("CPASS")};Host=hgtinstance.csftqsjshidx.ap-south-1.rds.amazonaws.com;Port=5432;Database=hgtDB;Pooling=true;";
+
+            services.AddDbContext<HGTDbContext>(options =>
+              //options.UseSqlServer(Configuration.GetConnectionString("HGTDB")));
+              // options.UseSqlServer(Configuration.GetConnectionString("AWSSQL")));
+              options.UseNpgsql(MYPS));
+             //options.UseNpgsql(Configuration.GetConnectionString("MYPSLocal")));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
@@ -54,7 +62,7 @@ namespace HGT6
                IssuerSigningKey = new SymmetricSecurityKey(
                    Encoding.UTF8.GetBytes(Configuration["SecurityKey"]))
            };
-        });
+       });
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddCors();
@@ -73,7 +81,7 @@ namespace HGT6
             services.AddAWSService<IAmazonS3>();
 
 
-           
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,7 +90,7 @@ namespace HGT6
             if (env.IsDevelopment())
             {
                 // app.UseDeveloperExceptionPage();
-                 app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
             else
             {
@@ -94,7 +102,7 @@ namespace HGT6
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseAuthentication();
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -103,18 +111,18 @@ namespace HGT6
             });
 
 
-            //app.UseSpa(spa =>
-            //{
-            //    // To learn more about options for serving an Angular SPA from ASP.NET Core,
-            //    // see https://go.microsoft.com/fwlink/?linkid=864501
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
 
-            //    spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "ClientApp";
 
-            //    if (env.IsDevelopment())
-            //    {
-            //        spa.UseAngularCliServer(npmScript: "start");
-            //    }
-            //});
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });
         }
     }
 }
