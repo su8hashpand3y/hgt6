@@ -61,7 +61,7 @@ namespace HGT6.Helpers
             }
             catch (Exception ex)
             {
-                //do something here
+                Console.WriteLine(ex);
             }
 
             return sent;

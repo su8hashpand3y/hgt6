@@ -46,7 +46,7 @@ namespace HGT6
               //options.UseSqlServer(Configuration.GetConnectionString("HGTDB")));
               // options.UseSqlServer(Configuration.GetConnectionString("AWSSQL")));
               options.UseNpgsql(MYPS));
-             //options.UseNpgsql(Configuration.GetConnectionString("MYPSLocal")));
+             // options.UseNpgsql(Configuration.GetConnectionString("MYPSLocal")));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>

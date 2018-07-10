@@ -2,7 +2,6 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using HashLibrary;
 using HGT6.Models;
 using HGT6.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -102,19 +101,13 @@ namespace HGT6.Controllers
                 try
                 {
                     var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-                    if (context.HGTUsers.FirstOrDefault(x => x.Email == model.Email) == null)
+                    if (context.HGTUsers.FirstOrDefault(x => x.Email.Equals(model.Email, StringComparison.InvariantCultureIgnoreCase)) == null)
                     {
-                        var hasher = new Hasher();
-                        var hashedPassword = hasher.HashPassword(model.Password);
-                       
-
                         HGTUser newUser = new HGTUser
                         {
                             FirstName = model.FirstName,
                             LastName = model.LastName,
                             Email = model.Email,
-                            PasswordHash = hashedPassword.Hash,
-                            Salt = hashedPassword.Salt,
                             Gender = model.Gender,
                             District = model.District,
                             Town = model.Town,
@@ -142,6 +135,9 @@ namespace HGT6.Controllers
                             return Ok(new ServiceResponse { Status = "error", Message = "Captha Answer not Matched" });
                         }
 
+                        var hasher = new PasswordHasher<HGTUser>();
+                        var hashedPassword = hasher.HashPassword(newUser,model.Password);
+                        newUser.PasswordHash = hashedPassword;
                         context.HGTUsers.Add(newUser);
                         context.SaveChanges();
                         // Send the verification Mail
@@ -153,9 +149,9 @@ namespace HGT6.Controllers
                         return Ok(new ServiceResponse { Status = "error", Message = "User Already Exists" });
                     }
                 }
-                catch 
+                catch(Exception e)
                 {
-                    return Ok(new ServiceResponse { Status = "error", Message = "Somthing doesn't seems to work" });
+                    return Ok(new ServiceResponse { Status = "error", Message = "Something Went Wrong" });
                 }
             }
             else
@@ -185,7 +181,7 @@ namespace HGT6.Controllers
         {
             bool succeeded = false;
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email == user.Email);
+            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email.Equals(user.Email, StringComparison.InvariantCultureIgnoreCase));
             if (foundUser == null)
                 return Ok(new ServiceResponse { Status = "error", Message = "User not found!" });
 
@@ -194,9 +190,9 @@ namespace HGT6.Controllers
                 // Send The verification Mail
             }
 
-            var hash = new HashedPassword(foundUser.PasswordHash, foundUser.Salt);
-            var hasher = new Hasher();
-            if (hasher.Check(user.Password, hash))
+            var hash = new PasswordHasher<HGTUser>();
+
+            if (hash.VerifyHashedPassword(foundUser,foundUser.PasswordHash, user.Password) ==  PasswordVerificationResult.Success)
                 succeeded = true;
             else return Ok(new ServiceResponse { Status = "error", Message = "Wrong Passwords!" });
 
@@ -257,7 +253,7 @@ namespace HGT6.Controllers
         public IActionResult PasswordResetEmail([FromBody]PassReset passReset)
         {
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email == passReset.Email);
+            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email.Equals(passReset.Email, StringComparison.InvariantCultureIgnoreCase));
             if (foundUser == null)
                 return Ok(new ServiceResponse { Status = "error", Message = "User not found!" });
 
@@ -286,7 +282,7 @@ namespace HGT6.Controllers
         public IActionResult PasswordReset([FromBody]PassReset passReset)
         {
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email == passReset.Email);
+            var foundUser = context.HGTUsers.FirstOrDefault(x => x.Email.Equals(passReset.Email, StringComparison.InvariantCultureIgnoreCase));
             if (foundUser == null)
                 return Ok(new ServiceResponse { Status = "error", Message = "User not found!" });
 
@@ -295,12 +291,13 @@ namespace HGT6.Controllers
                 return Ok(new ServiceResponse { Status = "error", Message = "Wrong Code" });
             }
 
-            var hasher = new Hasher();
-            var hashedPassword = hasher.HashPassword(passReset.Password);
-            foundUser.PasswordHash = hashedPassword.Hash;
-            foundUser.Salt = hashedPassword.Salt;
             foundUser.VerificationCode = "Not available";
             foundUser.LastPassowrdResetTime = DateTime.Now;
+
+            var hasher = new PasswordHasher<HGTUser>();
+            var hashedPassword = hasher.HashPassword(foundUser, passReset.Password);
+            foundUser.PasswordHash = hashedPassword;
+
             context.SaveChanges();
             return Ok(new ServiceResponse { Status = "good", Message = "Password Reset Successful" });
         }

@@ -48,7 +48,7 @@ namespace HGT6.Controllers
                 try
                 {
                     var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-                    var user = context.HGTUsers.FirstOrDefault(x => x.Email == userEmail);
+                    var user = context.HGTUsers.FirstOrDefault(x => x.Email.Equals(userEmail, StringComparison.InvariantCultureIgnoreCase));
                     if (user != null)
                     {
                         long size = file.Length;

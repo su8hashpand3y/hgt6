@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HGT6.Helpers;
 
 namespace HGT6.Controllers
 {
@@ -87,7 +88,7 @@ namespace HGT6.Controllers
             try
             {
                 var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-                Feedback f = new Feedback { Message = message };
+                Feedback f = new Feedback { Message = message, UserEmail = HttpContext.GetUserEmail() };
                 context.Feedbacks.Add(f);
             }
             catch
