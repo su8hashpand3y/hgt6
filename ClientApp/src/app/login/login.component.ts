@@ -36,11 +36,12 @@ export class LoginComponent  {
                 if(x.status == 'registerd'){
                     localStorage.setItem('token', x.message);
                     this.toast.info(`Thank You.You are logged in as ${user.email}`);
-                    console.log("dialog ref");
-                    console.log(this.dialogRef)
-                    if (this.dialogRef)
+                    console.log("URL is");
+                    console.log(this.router.url)
+                    if (this.dialogRef.close)
                     this.dialogRef.close(x.message);
-                   this.router.navigateByUrl('/Home');
+                    if (this.router.url == '/Login')
+                    this.router.navigateByUrl('/Home');
                 }
                   else
                     this.toast.error(`${this.email} was not Logged In`);
@@ -61,13 +62,13 @@ export class LoginComponent  {
 
   forgotPassword(){
     this.cancel();
-    console.log("forgotten");
-    //this.router.navigateByUrl('ForgotPassword');
+    this.router.navigateByUrl('ForgotPassword');
   }
 
   saveUrl(){
     this.memory.setReturnUrl(this.router.url);
     this.cancel();
+    this.router.navigateByUrl('Register')
   }
 
 }

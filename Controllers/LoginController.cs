@@ -30,6 +30,7 @@ namespace HGT6.Controllers
         private IConfiguration Configuration { get; }
         private IServiceProvider services { get; }
         private IEmailSender emailSender { get; }
+        private ILogger logger { get; }
 
         public LoginController(IAmazonS3 s3Client, IConfiguration configuration, IServiceProvider services, IEmailSender emailSender)
         {
@@ -37,6 +38,7 @@ namespace HGT6.Controllers
             this.services = services;
             this.s3Client = s3Client;
             this.emailSender = emailSender;
+            this.logger = logger;
         }
 
         private async Task<bool> UploadFileAsync(byte[] file, string keyName)
@@ -62,10 +64,13 @@ namespace HGT6.Controllers
             }
             catch (AmazonS3Exception e)
             {
+                this.logger.Log("Login  UploadFile Aysnc Amazon has Problem", e.Message, e.InnerException?.Message);
+
                 Console.WriteLine("Error encountered on server. Message:'{0}' when writing an object", e.Message);
             }
             catch (Exception e)
             {
+                this.logger.Log("Login  UploadFile Aysnc has Problem", e.Message, e.InnerException?.Message);
                 Console.WriteLine("Unknown encountered on server. Message:'{0}' when writing an object", e.Message);
             }
 
@@ -84,8 +89,9 @@ namespace HGT6.Controllers
               return Ok(new ServiceTypedResponse<CapthaResponse>() {Status ="ok" ,Message = new CapthaResponse { CapthaId =captha.Id,CapthaText =captha.CapthaText}});
     
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
+                this.logger.Log("Login Captha Generation has Problem", e.Message, e.InnerException?.Message);
                 return Ok(new ServiceTypedResponse<CapthaResponse>{Status = "error"});
             }
         }
@@ -151,6 +157,7 @@ namespace HGT6.Controllers
                 }
                 catch(Exception e)
                 {
+                    this.logger.Log("Register has Problem", e.Message, e.InnerException?.Message);
                     return Ok(new ServiceResponse { Status = "error", Message = "Something Went Wrong" });
                 }
             }

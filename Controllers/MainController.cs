@@ -16,9 +16,11 @@ namespace HGT6.Controllers
         string Default_Poster = "/Media/Got_Talent_logo.jpg";
         private IServiceProvider services { get; }
         private IConfiguration Configuration { get;  }
-        public MainController(IServiceProvider services, IConfiguration Configuration)
+        private ILogger logger { get; }
+        public MainController(IServiceProvider services, IConfiguration configuration,ILogger logger)
         {
             this.services = services;
+            this.logger = logger;
         }
 
         public IActionResult GetVideoList(string type,int skip, int take = 15)
@@ -91,8 +93,9 @@ namespace HGT6.Controllers
                 Feedback f = new Feedback { Message = message, UserEmail = HttpContext.GetUserEmail() };
                 context.Feedbacks.Add(f);
             }
-            catch
+            catch(Exception e)
             {
+                this.logger.Log("GetVideo has Problem", e.Message, e.InnerException?.Message);
             }
 
             return Ok(new ServiceResponse { Status = "good", Message = "Thank You" });

@@ -26,3 +26,8 @@
     align-items: center;
     justify-content: space-around;
   }
+
+  .example-margin {
+    margin: 0 10px;
+  }
+  

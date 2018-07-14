@@ -17,6 +17,7 @@ using Amazon.Runtime;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace HGT6
 {
@@ -45,8 +46,8 @@ namespace HGT6
             services.AddDbContext<HGTDbContext>(options =>
               //options.UseSqlServer(Configuration.GetConnectionString("HGTDB")));
               // options.UseSqlServer(Configuration.GetConnectionString("AWSSQL")));
-              options.UseNpgsql(MYPS));
-             // options.UseNpgsql(Configuration.GetConnectionString("MYPSLocal")));
+               options.UseNpgsql(MYPS));
+              // options.UseNpgsql(Configuration.GetConnectionString("MYPSLocal")));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>
@@ -68,6 +69,7 @@ namespace HGT6
             services.AddCors();
             services.AddMvc();
 
+            services.AddScoped<ILogger,Logger>();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -79,7 +81,10 @@ namespace HGT6
             //awsOption.Region = RegionEndpoint.APSoutheast1;
             //awsOption.Credentials = new AWSCredentials();
             services.AddAWSService<IAmazonS3>();
-
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 52428800;
+            });
 
 
         }

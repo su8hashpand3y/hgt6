@@ -90,6 +90,7 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
   }
   
   videoSelected(event){
+    this.errors ="";
     var file = event.target.files[0];
     console.log(file);
     if(file){
@@ -102,9 +103,22 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
       // upload the video and show a loader till it is uploaded
        this.loading = true;
        let formData: FormData = new FormData();
-       formData.append('file', file, file.name);
+       formData.append('file', file);
        console.log("uploading to server")
-       this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/UploadFileToStore",formData).subscribe(x=>{
+      let ext = (/[.]/.exec(file.name)) ? /[^.]+$/.exec(file.name) : undefined;
+       console.log(ext);
+      if(!ext){
+        this.errors ="Cant Read Extension";
+        return;
+      }
+
+    
+
+      let headers: any = new Headers();
+      headers.set('Content-Type', 'multipart/form-data');
+
+
+       this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/UploadFileToStore?ext="+ext,formData).subscribe(x=>{
          console.log(x);
          if(x.status =='success'){
            this.videoUrl=x.message; 
@@ -115,6 +129,8 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
         }
 
         this.loading=false;
+       },(e)=>{
+        console.log(e);
        });
       // console.log(this.videoLocalPath);
     }
@@ -135,6 +151,31 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
     
 
     upload() {
+      this.errors = "";
+      if(!this.capthaText || this.capthaText == ""){
+              this.errors = "Captha is Mandatory!";
+              return;
+      }
+
+      if(!this.name || this.name == ""){
+        this.errors = "Name is Mandatory!";
+        return;
+
+}
+
+if(!this.description || this.description == ""){
+  this.errors = "Description is Mandatory!";
+  return;
+
+}
+
+
+if(!this.category || this.category == ""){
+  this.errors = "Category is Mandatory!";
+  return;
+
+}
+
               this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/upload", {
                 title:this.name,
                 description:this.description,

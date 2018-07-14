@@ -16,6 +16,7 @@ namespace HGT6.Models
         public DbSet<Captha> Capthas { get; set; }
         public DbSet<TempVideo> TempVideo { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<ErrorLog> Errors { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder builder)
         //{

@@ -21,6 +21,11 @@ namespace HGT6
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+             .UseKestrel(options =>
+             {
+                 options.Limits.KeepAliveTimeout = TimeSpan.MaxValue;
+                 options.Limits.MaxRequestBodySize = null;
+             });
     }
 }

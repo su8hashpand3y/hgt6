@@ -14,9 +14,11 @@ namespace HGT6.Controllers
 public class VideoController : Controller
     {
         private IServiceProvider services { get; }
-        public VideoController(IServiceProvider services)
+        private ILogger logger { get; }
+        public VideoController(IServiceProvider services,ILogger logger)
         {
             this.services = services;
+            this.logger = logger;
         }
         // GET: /<controller>/ 
         [HttpGet()]
@@ -54,8 +56,10 @@ public class VideoController : Controller
                         result.IsLikedByMe = true;
                     }
                 }
-                catch
+                catch(Exception e)
                 {
+                    this.logger.Log("GetVideo has Problem", e.Message, e.InnerException?.Message);
+
                 }
 
                 try
@@ -63,8 +67,9 @@ public class VideoController : Controller
                     video.Views++;
                     context.SaveChangesAsync();
                 }
-                catch 
+                catch (Exception e)
                 {
+                    this.logger.Log("GetVideo views++ has Problem", e.Message, e.InnerException?.Message);
                 }
 
                 return Ok(new ServiceTypedResponse<VideoViewModel> { Status = "good", Message = result });

@@ -11,6 +11,7 @@ import { IServiceTypedResponse } from '../ViewModels/IServiceTypedResponse';
 import { MemoryService } from '../memory.service';
 import { BaseAddressService } from '../base-address.service';
 
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -36,6 +37,8 @@ export class RegisterComponent implements OnInit {
   confirmPassword:string;
   confirmEmail:string;
 
+
+  agreed:boolean=false;
 
   errors:string;
 
@@ -72,9 +75,17 @@ export class RegisterComponent implements OnInit {
     });
  }
 
+ toggleAgreed(){
+   this.agreed = !this.agreed;
+ }
 
   register(){
    this.errors = "";
+  if(!this.agreed){
+    this.errors = "Please agree to privacy,terms and conditions";
+          return;
+  }
+
     if(this.email !== this.confirmEmail){
           this.errors = "Email Dont Match";
           return;

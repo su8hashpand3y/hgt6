@@ -55,6 +55,24 @@ namespace HGT6.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("HGT6.Models.ErrorLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Exception");
+
+                    b.Property<string>("InnerException");
+
+                    b.Property<string>("Message");
+
+                    b.Property<DateTime>("Time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Errors");
+                });
+
             modelBuilder.Entity("HGT6.Models.Feedback", b =>
                 {
                     b.Property<long>("Id")

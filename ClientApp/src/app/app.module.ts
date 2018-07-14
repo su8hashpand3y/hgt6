@@ -14,6 +14,8 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatSelectModule} from '@angular/material/select';
 import {MatRadioModule} from '@angular/material/radio';
 import { MatDialogRef } from '@angular/material';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
 
 
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -39,8 +41,10 @@ import { GrowComponent } from './grow/grow.component';
 import { AvatarPickerComponent } from './avatar-picker/avatar-picker.component';
 import { UserDetailComponent } from './user-detail/user-detail.component';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 
-let dummyDialogRef = { close: () => {}}
+let dummyDialogRef = { close: () => { 
+ }}
 
 @NgModule({
   declarations: [
@@ -60,7 +64,8 @@ let dummyDialogRef = { close: () => {}}
     GrowComponent,
     AvatarPickerComponent,
     UserDetailComponent,
-    SearchResultComponent
+    SearchResultComponent,
+    PrivacyComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -82,7 +87,8 @@ let dummyDialogRef = { close: () => {}}
       { path: 'user/:id', component: UserDetailComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'error', component: ErrorComponent },
-      { path: 'comment', component: CommentsComponent }
+      { path: 'comment', component: CommentsComponent },
+      { path: 'privacy', component: PrivacyComponent }
     ]),
     BrowserAnimationsModule,
     MatSliderModule,
@@ -93,6 +99,7 @@ let dummyDialogRef = { close: () => {}}
     MatButtonModule,
     MatStepperModule,
     MatSelectModule,
+    MatCheckboxModule,
     MatRadioModule,
     ImageCropperModule,
     LoadingModule.forRoot({

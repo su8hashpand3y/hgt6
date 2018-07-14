@@ -31,7 +31,6 @@ namespace HGT6.ViewModels
         [Required]
         public string Town { get; set; }
 
-        [Required]
         public int Age { get; set; }
     }
 }
