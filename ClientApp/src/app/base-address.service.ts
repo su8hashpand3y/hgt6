@@ -7,9 +7,7 @@ import { environment } from '../environments/environment';
 export class BaseAddressService {
 
   get():string{
-    if (!environment.production) {
-    return "http://localhost:54412";
-    }
+   
 
     return "";
   }

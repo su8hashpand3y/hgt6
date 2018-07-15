@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav-menu',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 export class NavMenuComponent {
   isExpanded = false;
   searchTerm:string;
-  constructor(private router:Router){}
+  constructor(private router:Router,private toster:ToastrService){}
 
   collapse() {
     this.isExpanded = false;
@@ -21,7 +22,7 @@ export class NavMenuComponent {
 
   logout(){
     localStorage.removeItem('token');
-    console.log("Log Out");
+    this.toster.info("Logout Succesful");
   }
 
   search()

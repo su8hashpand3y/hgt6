@@ -150,7 +150,7 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
     }
     
 
-    upload() {
+  upload() {
       this.errors = "";
       if(!this.capthaText || this.capthaText == ""){
               this.errors = "Captha is Mandatory!";
@@ -174,8 +174,8 @@ if(!this.category || this.category == ""){
   this.errors = "Category is Mandatory!";
   return;
 
-}
-
+    }
+    this.snap();
               this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/upload", {
                 title:this.name,
                 description:this.description,

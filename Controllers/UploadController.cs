@@ -218,7 +218,7 @@ namespace HGT6.Controllers
         {
             try
             {
-                string path = $"{this.hostingEnvironment.ContentRootPath}/{keyName}";
+                string path = Path.Combine(this.hostingEnvironment.ContentRootPath,keyName);
                 FileStream fs = new FileStream(path, FileMode.Open);
                 var fileTransferUtility = new TransferUtility(this.s3Client);
                 var fileTransferUtilityRequest = new TransferUtilityUploadRequest

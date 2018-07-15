@@ -190,6 +190,8 @@ namespace HGT6.Migrations
 
                     b.Property<string>("Path");
 
+                    b.Property<DateTime>("Time");
+
                     b.HasKey("Id");
 
                     b.ToTable("TempVideo");
