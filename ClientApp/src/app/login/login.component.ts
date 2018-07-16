@@ -31,28 +31,26 @@ export class LoginComponent  {
           email: this.email,
           password: this.password
       };  
-              this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Login/Login", user).subscribe(x => {
-        
-                if(x.status == 'registerd'){
-                    localStorage.setItem('token', x.message);
-                    this.toast.info(`Thank You.You are logged in as ${user.email}`);
-                    console.log("URL is");
-                    console.log(this.router.url)
-                    if (this.dialogRef.close)
-                    this.dialogRef.close(x.message);
-                    if (this.router.url == '/Login')
-                    this.router.navigateByUrl('/Home');
-                }
-                  else
-                    this.toast.error(`${this.email} was not Logged In`);
-                  
-                  if(x.status == 'error'){
-                   this.toast.error(x.message);
-                  }
-                  if (this.dialogRef)
-                  this.dialogRef.close();
-                  this.loading= false
-              });
+    this.http.post<IServiceResponse>(this.baseAddress.get() + "/api/Login/Login", user).subscribe(x => {
+
+      if (x.status == 'registerd') {
+        localStorage.setItem('token', x.message);
+        this.toast.info(`Thank You.You are logged in as ${user.email}`);
+        if (this.dialogRef.close)
+          this.dialogRef.close(x.message);
+        if (this.router.url == '/Login')
+          this.router.navigateByUrl('/Home');
+      }
+      else
+        this.toast.error(`${this.email} was not Logged In`);
+
+      if (x.status == 'error') {
+        this.toast.error(x.message);
+      }
+      if (this.dialogRef)
+        this.dialogRef.close();
+      this.loading = false
+    }, e => this.loading = false);
   }
 
   cancel(){

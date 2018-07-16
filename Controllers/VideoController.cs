@@ -47,6 +47,10 @@ public class VideoController : Controller
                     VideoId = video.ID,
                     NumberOfViews = video.Views,
                 };
+                if(video.IsReviewed == false)
+                {
+                    return Ok(new ServiceResponse { Status = "bad", Message = "Video Is under review Beacause of SPAM markings." });
+                }
 
                 try
                 {
@@ -83,14 +87,14 @@ public class VideoController : Controller
         {
             var result = new List<CommentViewModel>();
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-            var comments = context.Comments.Include(x => x.HGTUser).Where(x => x.VideoId == id && x.IsDeleted != false).OrderByDescending(x=>x.ID).ToList();
-            comments.ForEach(x => result.Add(new CommentViewModel { CommentText= x.CommentText,UserFirstName= x.HGTUser?.FirstName }));
+            var comments = context.Comments.Include(x => x.HGTUser).Where(x => x.VideoId == id && x.IsDeleted != true).OrderByDescending(x=>x.ID).ToList();
+            comments.ForEach(x => result.Add(new CommentViewModel { CommentText= x.CommentText,UserFirstName= x.HGTUser?.FirstName, Id =x.ID.ToString() }));
             return Ok(new ServiceTypedResponse<List<CommentViewModel>> { Status = "good", Message = result });
         }
 
         [HttpPost]
         [Authorize]
-        public IActionResult Like([FromBody]long videoId)
+        public IActionResult Like([FromForm]long videoId)
         {
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
             var likedVideo = context.Videos.FirstOrDefault(x => x.ID == videoId);
@@ -99,7 +103,7 @@ public class VideoController : Controller
                 likedVideo.Likes++;
                 var userId = HttpContext.GetUserID();
                 var liked = context.Likes.FirstOrDefault(x => x.VideoId == videoId && x.UserId == userId);
-                if (liked != null)
+                if (liked == null)
                 {
                     var like = new Like { VideoId = videoId, UserId = HttpContext.GetUserID() };
                     context.Likes.Add(like);
@@ -117,10 +121,10 @@ public class VideoController : Controller
         public IActionResult Comment(long VideoId, string CommentText)
         {
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
-            var likedVideo = context.Videos.FirstOrDefault(x => x.ID == VideoId);
-            if (likedVideo != null)
+            var video = context.Videos.FirstOrDefault(x => x.ID == VideoId);
+            if (video != null)
             {
-                likedVideo.Comments++;
+                video.Comments++;
                 var comment = new Comment { VideoId = VideoId, HGTUserID = HttpContext.GetUserID(), CommentText = CommentText };
                 context.Comments.Add(comment);
                 context.SaveChanges();
@@ -132,7 +136,7 @@ public class VideoController : Controller
 
         [HttpPost]
         [Authorize]
-        public IActionResult DelComment(long commentId)
+        public IActionResult DelComment([FromForm]long commentId)
         {
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;
             var comment = context.Comments.FirstOrDefault(x => x.ID == commentId);

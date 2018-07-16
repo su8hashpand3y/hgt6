@@ -5,6 +5,7 @@ import { CommentViewModel } from '../ViewModels/commentViewMode';
 import { IServiceResponse } from '../ViewModels/IServiceResponse';
 import { AuthService } from '../auth.service';
 import { BaseAddressService } from '../base-address.service';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-comments',
@@ -31,17 +32,18 @@ export class CommentsComponent implements OnInit {
     });
   }
 
-  deleteComment(comment){
+  deleteComment(comment: CommentViewModel) {
     this.loading= true;
     let data = new FormData();
-    data.append('id',comment.id);
+    console.log(comment.id);
+    data.append('commentId', comment.id);
     this.http.post<IServiceResponse>(this.baseAddress.get()+'/Video/DelComment',data).subscribe(x=>{
          this.loading= false;
         var index = this.comments.indexOf(comment);
             if (index > -1) {
               this.comments.splice(index, 1);
       }
-    });
+    }, err => this.loading = false);
   }
 
   comment(){
@@ -49,14 +51,14 @@ export class CommentsComponent implements OnInit {
     data.append('videoId',this.videoId);
     data.append('commentText',this.UserComment);
     this.loading = true;
-    this.comments.unshift({ commentText:this.UserComment,userFirstName:"Me"});
+    this.comments.unshift({ commentText: this.UserComment, userFirstName: "Me", id: null});
         this.UserComment = "";
-    this.http.post<IServiceResponse>(this.baseAddress.get()+'/Video/Comment',data).subscribe(x=>{
-      if(x.status=='good'){
-        
+    this.http.post<IServiceResponse>(this.baseAddress.get() + '/Video/Comment', data).subscribe(x => {
+      if (x.status == 'good') {
+
       }
-      this.loading= false;
-    });
+      this.loading = false;
+    }, err => this.loading = false);
   }
 
   like(){
@@ -75,7 +77,6 @@ export class CommentsComponent implements OnInit {
   ngOnInit() {
     this.liked = this.isLikedByMe;
      this.isAuthenticated = this.authService.isAuthenticated() ?  true: false;
-     console.log(this.isAuthenticated);
   }
 
   login(){

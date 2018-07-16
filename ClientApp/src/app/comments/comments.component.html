@@ -35,6 +35,6 @@
   <div *ngFor="let comment of comments" class="col-7 dialogbox">
    <div class="message">{{comment.commentText}}</div> 
    <div class="message right">By {{comment.userFirstName}}</div> 
-   <div *ngIf="!isAuthenticated" (click)="deleteComment(comment)" class="message right">Delete</div> 
+   <div *ngIf="isAuthenticated && comment.id" (click)="deleteComment(comment)"  style="color:orangered"  class="message right">Delete</div> 
   </div>
 </div>

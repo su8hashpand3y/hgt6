@@ -4,7 +4,7 @@
  
  <a class="nav-link " routerLink="/Login">Already have an Account ? Login Here</a>  
  
- <form class="example-form" ngNativeValidate (ngSubmit)="register()">
+ <form class="example-form" ngNativeValidate (ngSubmit)="register()" >
     <img *ngIf="avatarImage" [src]='avatarImage' name="profilePic"><br>
     <button type="button" class="btn "
             (click)="openDialog()">
@@ -57,16 +57,16 @@
         </mat-form-field>
 
         <mat-form-field class="example-full-width">
-            <input matInput placeholder="Town" type="town"  [(ngModel)]="town" name="town" required>
+            <input matInput placeholder="Town" type="text"  [(ngModel)]="town" name="town" required>
           </mat-form-field>
 
           <input [(ngModel)]="capthaId" name="capthaId" hidden/>
         <div class="example-selected-value">Prove You are Human, type <b>{{capthaText}}</b> below</div>
           <mat-form-field class="example-full-width">
-              <input matInput  type="captha"  [(ngModel)]="captha" name="captha" required>
+              <input matInput  type="text"  [(ngModel)]="captha" name="captha" required>
             </mat-form-field>
  
-            <mat-checkbox (click)="toggleAgreed()"  [(ngModel)]="agreed"></mat-checkbox>
+            <mat-checkbox (click)="toggleAgreed()"  [(ngModel)]="agreed" name="agreed"></mat-checkbox>
             I Agree with <a href="/privacy" target="_blank">Privacy,Term and Conditions.</a>
 <br>
      <div class="button-row">

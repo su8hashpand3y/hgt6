@@ -56,7 +56,6 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.http.get<IServiceTypedResponse<ICapthaResponse>>(this.baseAddress.get() +"/api/Login/getCaptha").subscribe( x => {
      
-    console.log(x)
     if(x.status == 'ok'){
       this.capthaId = x.message.capthaId;
       this.capthaText = x.message.capthaText;
@@ -96,7 +95,6 @@ export class RegisterComponent implements OnInit {
       return;
 }
 
-    console.log("Registering");
     
     this.loading=true;
       let rvm : RegisterViewModel= {
@@ -114,17 +112,17 @@ export class RegisterComponent implements OnInit {
       captha : this.captha,
     }
     
-    this.http.post<IServiceResponse>(this.baseAddress.get() +"/api/Login/Register",rvm).subscribe(x=> {
-      if(x.status == 'registerd'){
+    this.http.post<IServiceResponse>(this.baseAddress.get() + "/api/Login/Register", rvm).subscribe(x => {
+      if (x.status == 'registerd') {
         localStorage.setItem('token', x.message);
         this.toaster.info(`Thank You.You are logged in as ${this.firstName}`);
         this.router.navigateByUrl(this.memory.getReturnUrl() || '');
       }
-      if(x.status == 'error'){
+      if (x.status == 'error') {
         this.errors = x.message;
       }
       this.loading = false;
-    });
+    }, e => this.loading = false);
     
   }
 

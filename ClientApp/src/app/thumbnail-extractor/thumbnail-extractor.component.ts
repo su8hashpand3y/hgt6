@@ -49,7 +49,6 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
     this.context = this.canvas.getContext('2d');
     this.http.get<IServiceTypedResponse<ICapthaResponse>>(this.baseAddress.get() +"/api/Login/getCaptha").subscribe( x => {
      
-      console.log(x)
       if(x.status == 'ok'){
         this.capthaId = x.message.capthaId;
         this.capthaText = x.message.capthaText;
@@ -83,7 +82,6 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
     this.canvas.width = 300;
     this.canvas.height = 200;	
     this.max = this.video.duration;
-    console.log(this.video.duration);
     this.canvas.crossOrigin = "Anonymous";
     this.video.currentTime= this.video.duration / 2;
     setTimeout(x=>this.snap(),500);
@@ -92,34 +90,27 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
   videoSelected(event){
     this.errors ="";
     var file = event.target.files[0];
-    console.log(file);
     if(file){
       if(file.size > 1048576 * 500){
         //greater than 500 MB
-        this.errors = "We dont support Big(> 500 MB) File"
-        console.log("File is too Big");
+        this.errors = "File Size should be under 500 MB"
         return;
       }
       // upload the video and show a loader till it is uploaded
        this.loading = true;
        let formData: FormData = new FormData();
        formData.append('file', file);
-       console.log("uploading to server")
       let ext = (/[.]/.exec(file.name)) ? /[^.]+$/.exec(file.name) : undefined;
-       console.log(ext);
-      if(!ext){
-        this.errors ="Cant Read Extension";
+      if (!ext && (ext.toString() !== 'mp4' || ext.toString() !== 'mov')) {
+        this.errors ="Can't Read Extension,Supported Extension are MP4 and MOV";
         return;
       }
-
-    
 
       let headers: any = new Headers();
       headers.set('Content-Type', 'multipart/form-data');
 
 
        this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/UploadFileToStore?ext="+ext,formData).subscribe(x=>{
-         console.log(x);
          if(x.status =='success'){
            this.videoUrl=x.message; 
            this.loadedToStore = true;
@@ -129,10 +120,9 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
         }
 
         this.loading=false;
-       },(e)=>{
-        console.log(e);
+       }, (e) => {
+         this.loading = false;
        });
-      // console.log(this.videoLocalPath);
     }
     else{
     }
@@ -140,7 +130,6 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
 
 		// Takes a snapshot of the video
 		 snap() {
-       console.log("snapping..");
 			// Define the size of the rectangle that will be filled (basically the entire element)
 			this.context.fillRect(0, 0, this.w, this.h);
       // Grab the image from the video
@@ -187,7 +176,6 @@ if(!this.category || this.category == ""){
               })
                   .subscribe(
                   x => {
-                    console.log(x);
                       if(x.status == 'success'){
                       this.toast.success(`Your video ${this.name} was uploaded successfully.`);
                       this.router.navigateByUrl(`/video/${x.message}`);

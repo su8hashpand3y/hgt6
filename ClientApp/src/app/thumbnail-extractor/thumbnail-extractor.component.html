@@ -5,12 +5,12 @@
  <h1>Upload</h1>
  <h3 *ngIf ="loading">Uploading video will take few minutes depending upon video size ,please be patient</h3>
 
-<video  #video (loadedmetadata)="loadedmetadata()" hidden [src]="videoUrl"   crossOrigin="anonymous">
+<video  #video (loadedmetadata)="loadedmetadata()" hidden [src]="videoUrl"  *ngIf="videoUrl"  crossOrigin="anonymous">
 </video>
 <span *ngIf="errors">{{errors}}</span>
 <div class="container">
         <div  class="row justify-content-center col-8 centered">
-            <input type="file" (change)="videoSelected($event)"  #selectedFile name="selectedFile" class="form-control" required id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Select File"  accept="video/mp4,video/mov,video/*">
+            <input type="file" (change)="videoSelected($event)"  #selectedFile name="selectedFile" class="form-control" required id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Select File"  accept="video/mp4,video/mov">
             <span *ngIf="errors">{{errors}}</span>
         </div>
 
@@ -66,11 +66,12 @@
                                 <input matInput  type="captha"  [(ngModel)]="captha" name="captha" required>
                               </mat-form-field>
 
-                          <div class="button-row">
-                                <button mat-button (click)="cancel()">Cancel</button>
-                                <button mat-raised-button color="primary" (click)="upload()">Upload</button>
-                                </div>
-                                <span *ngIf="errors">{{errors}}</span>
+                            <div class="button-row">
+                              <button mat-button (click)="cancel()">Cancel</button>
+                              <span style="color:orangered" *ngIf="errors">{{errors}}</span>
+                              <button mat-raised-button color="primary" (click)="upload()">Upload</button>
+                            </div>
+                               
     </div>
 </div>
 

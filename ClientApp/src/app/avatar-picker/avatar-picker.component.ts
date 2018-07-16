@@ -12,27 +12,6 @@ export class AvatarPickerComponent  {
   croppedImage: any = '';
 
    constructor(public dialogRef: MatDialogRef<AvatarPickerComponent>){}
-  //     @Inject(MAT_DIALOG_DATA) public dataSent: any) {
-  //     this.cropperSettings = new CropperSettings();
-  //     this.cropperSettings.width = 100;
-  //     this.cropperSettings.height = 100;
-  //     this.cropperSettings.croppedWidth = 100;
-  //     this.cropperSettings.croppedHeight = 100;
-  //     this.cropperSettings.canvasWidth = 400;
-  //     this.cropperSettings.canvasHeight = 300;
-
-  //     this.data = {};
-  // }
-
-  // onNoClick(): void {
-  //     console.log("done with popup");
-  //     this.dialogRef.close();
-  // }
-
-  // onDoneClick(): void {
-  //     console.log("Cancelling with popup");
-  //     this.dialogRef.close(this.data.image);
-  // }
 
   fileChangeEvent(event: any): void {
     this.imageChangedEvent = event;

@@ -25,24 +25,22 @@ export class VideoComponent implements OnInit {
     this.loading= true;
     this.id = this.route.snapshot.params['id'];
     this.http.get<IServiceTypedResponse<VideoViewModel>>(this.baseAddress.get()+"/video/GetVideo",{params:this.route.snapshot.params}).subscribe(x=>{
-      console.log(x);
       
       if(x.status == 'good'){
-             console.log(x.message)
              this.video = x.message;
       }
       if(x.status == 'bad'){
 
       }
       this.loading= false;
-    });
+    }, err => this.loading = false);
   }
 
   report(id){
     this.reported = true;
     let data = new FormData();
     data.append('videoId',id);
-    this.http.post(this.baseAddress.get()+"/video/ReportVideo",data).subscribe(x=>console.log("video reported successfuly"));
+    this.http.post(this.baseAddress.get()+"/video/ReportVideo",data).subscribe(x=>console.log("Video reported successfuly"));
   }
 
   ngOnDestroy() {
@@ -62,7 +60,7 @@ export class VideoComponent implements OnInit {
 
       }
       this.loading= false;
-    })
+    }, err => this.loading = false)
   });
   }
 

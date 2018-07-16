@@ -27,21 +27,14 @@ export class HomeComponent {
 
   videos: VideoViewModel[]= [];
   onScroll() {
-    console.log("fetching next 10");
     this.fetchVideos(10);
   }
 
   ngOnInit() {
 
     this.http.get(this.baseAddress.get() +"/Main/GetVideoList").subscribe(x=>console.log(x));
-    console.log("paramters are")
-    console.log(this.route.snapshot.params)
     this.whatType =  this.route.snapshot.params[0];
     this.fetchVideos();
-    // this.sub = this.route.params.subscribe(params => {
-    //   this.route.url.subscribe(x=>this.whatType = x && x[0] && x[0].path);
-    //   this.fetchVideos();
-    // });
   }
 
   fetchVideos(take?:Number){
@@ -52,8 +45,6 @@ export class HomeComponent {
      query+=`&take=${take.toString()}`;
    }
    
-
-    console.log(this.baseAddress.get());
     this.http.get<IServiceTypedResponse<VideoViewModel[]>>(this.baseAddress.get() + `/Main/GetVideoList${query}`).subscribe(x=>
       {
         if(x.status == "good")

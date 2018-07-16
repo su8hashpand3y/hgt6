@@ -22,7 +22,6 @@ export class UserDetailComponent implements OnInit {
   ngOnInit() {
        this.id = this.route.snapshot.params['id'];  
       this.http.get<IServiceTypedResponse<RegisterViewModel>>(this.baseAddress.get()+"/userDetail/GetUser",{params:this.route.snapshot.params}).subscribe(x=>{
-        console.log(x);
         if(x.status == 'good'){
                this.user = x.message;
                this.getUsersVideo();

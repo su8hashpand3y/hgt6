@@ -43,20 +43,6 @@ namespace HGT6.Controllers
             this.logger = logger;
         }
 
-        //[HttpPost("[action]")]
-        //// [Authorize]
-        //// [RequestSizeLimit(1048576 * 500)]
-        //[DisableRequestSizeLimit]
-        //public async Task<IActionResult> Upload33()
-        //{
-        //    var t = Request.ReadFormAsync();
-        //    t.form
-        //    if (!Request.ReadFormAsync().Content.IsMimeMultipartContent())
-        //    {
-        //        throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-        //    }
-        //}
-
         public async Task<IActionResult> UploadMultipartUsingReader(string fileAddress)
         {
             var boundary = GetBoundary(Request.ContentType);
@@ -134,7 +120,11 @@ namespace HGT6.Controllers
                     if (user != null)
                     {
                         String ext = Request.Query["ext"]; 
-                        // Very immportant to check format here other anyone will upload anything
+                        if(!ext.Equals("mp4",StringComparison.InvariantCultureIgnoreCase) || !ext.Equals("mov", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            return Ok(new ServiceResponse { Status = "error", Message = "File Should be in MP4 or MOV format" });
+                        }
+
                         var uniqueID = CreateUniqueVideoID();
                         var fileAddress = $"{user.Id}_{ uniqueID}.{ext}";
                         await this.UploadMultipartUsingReader(fileAddress);

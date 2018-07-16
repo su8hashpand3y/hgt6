@@ -24,7 +24,6 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ThumbnailExtractorComponent } from './thumbnail-extractor/thumbnail-extractor.component';
 import { ErrorsHandler } from './ErrorsHandler';
 import { TokenInterceptor } from './TokenInterceptor';
@@ -52,7 +51,6 @@ let dummyDialogRef = { close: () => {
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent,
     ThumbnailExtractorComponent,
     VideoComponent,
     ErrorComponent,
@@ -85,7 +83,6 @@ let dummyDialogRef = { close: () => {
       { path: 'thumb', component: ThumbnailExtractorComponent },
       { path: 'video/:id', component: VideoComponent },
       { path: 'user/:id', component: UserDetailComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
       { path: 'error', component: ErrorComponent },
       { path: 'comment', component: CommentsComponent },
       { path: 'privacy', component: PrivacyComponent }

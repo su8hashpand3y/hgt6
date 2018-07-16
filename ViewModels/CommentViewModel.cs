@@ -7,6 +7,7 @@ namespace HGT6.ViewModels
 {
     public class CommentViewModel
     {
+        public string Id { get; set; }
         public string CommentText { get; set; }
         public string UserFirstName { get; set; }
     }

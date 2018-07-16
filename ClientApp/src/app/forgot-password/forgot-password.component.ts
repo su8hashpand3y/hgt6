@@ -32,7 +32,6 @@ export class ForgotPasswordComponent implements OnInit {
 
 
    sendMail(){
-     console.log("Sending Mail");
      var data = {
       email: this.email,
       };  

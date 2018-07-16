@@ -26,7 +26,6 @@ export class SearchResultComponent implements OnInit {
  };
 
  onScroll() {
-  console.log("fetching next 10");
   this.fetchVideos(10);
 }
 
@@ -45,8 +44,9 @@ export class SearchResultComponent implements OnInit {
         if(x.status == "bad")
         {
              this.toastr.error(`Problem Loading Videos`);
-        }
-      });
+      }
+      this.loading = false;
+    },e => this.loading = false);
   }
 
   fetchVideos(take?:Number){

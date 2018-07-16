@@ -34,9 +34,12 @@ export class ErrorsHandler implements ErrorHandler {
       }
    } else {
      // Handle Client Error (Angular Error, ReferenceError...)     
-     toast.error("Something Went wrong :(");
+     console.log("Something went wrong with Web Browser :(");
+     console.log(error);
    }
      
-    toast.error("Something Went wrong :(");
+    console.log("Something went wrong :(");
+    console.log(error);
+
   }
 }

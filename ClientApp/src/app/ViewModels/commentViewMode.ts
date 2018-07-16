@@ -1,5 +1,5 @@
 export class CommentViewModel{
-    id?:Number;
+    id: string;
     commentText:string;
     userFirstName:string;
 }
