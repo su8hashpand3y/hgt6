@@ -128,7 +128,7 @@ namespace HGT6.Controllers
                         var uniqueID = CreateUniqueVideoID();
                         var fileAddress = $"{user.Id}_{ uniqueID}.{ext}";
                         await this.UploadMultipartUsingReader(fileAddress);
-                        TempVideo tv = new TempVideo { Path= $"https://s3.ap-south-1.amazonaws.com/{bucketName}/{fileAddress}" };
+                        TempVideo tv = new TempVideo { Path= $"https://s3.ap-south-1.amazonaws.com/{bucketName}/{fileAddress}" ,UserEmail = user.Email};
                         context.TempVideo.Add(tv);
                         context.SaveChanges();
                         return await UploadByteAsync(fileAddress);
