@@ -5,7 +5,7 @@
  <h1>Upload</h1>
  <h3 *ngIf ="loading">Uploading video will take few minutes depending upon video size ,please be patient</h3>
 
-<video  #video (loadedmetadata)="loadedmetadata()" hidden [src]="videoUrl"  *ngIf="videoUrl"  crossOrigin="anonymous">
+<video  #video (loadedmetadata)="loadedmetadata()" hidden [src]="videoUrl ? videoUrl :  'http://fakeAdress.com'" crossOrigin="anonymous">
 </video>
 <span *ngIf="errors">{{errors}}</span>
 <div class="container">

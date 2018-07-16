@@ -120,7 +120,7 @@ namespace HGT6.Controllers
                     if (user != null)
                     {
                         String ext = Request.Query["ext"]; 
-                        if(!ext.Equals("mp4",StringComparison.InvariantCultureIgnoreCase) || !ext.Equals("mov", StringComparison.InvariantCultureIgnoreCase))
+                        if(!(ext.Equals("mp4",StringComparison.InvariantCultureIgnoreCase) || ext.Equals("mov", StringComparison.InvariantCultureIgnoreCase)))
                         {
                             return Ok(new ServiceResponse { Status = "error", Message = "File Should be in MP4 or MOV format" });
                         }
