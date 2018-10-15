@@ -86,12 +86,12 @@ export class RegisterComponent implements OnInit {
   }
 
     if(this.email !== this.confirmEmail){
-          this.errors = "Email Dont Match";
+          this.errors = "Email Don't Match";
           return;
     }
 
     if(this.password !== this.confirmPassword){
-      this.errors = "Password Dont Match";
+      this.errors = "Password Don't Match";
       return;
 }
 
@@ -113,6 +113,7 @@ export class RegisterComponent implements OnInit {
     }
     
     this.http.post<IServiceResponse>(this.baseAddress.get() + "/api/Login/Register", rvm).subscribe(x => {
+      this.loading = false;
       if (x.status == 'registerd') {
         localStorage.setItem('token', x.message);
         this.toaster.info(`Thank You.You are logged in as ${this.firstName}`);
@@ -121,7 +122,6 @@ export class RegisterComponent implements OnInit {
       if (x.status == 'error') {
         this.errors = x.message;
       }
-      this.loading = false;
     }, e => this.loading = false);
     
   }

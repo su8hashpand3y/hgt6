@@ -275,9 +275,10 @@ namespace HGT6.Controllers
             }
 
             foundUser.VerificationCode = rand.Next(1000, 9999).ToString();
-            context.SaveChanges();
+           
             if (this.emailSender.SendMail(passReset.Email, "Code To Reset Your Password", $"The code to reset your password is {foundUser.VerificationCode}"))
             {
+                context.SaveChanges();
                 return Ok(new ServiceResponse { Status = "good", Message = "We have mailed you code to reset your password" });
             }
 

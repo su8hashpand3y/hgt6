@@ -69,9 +69,13 @@
             <mat-checkbox  [(ngModel)]="agreed" (onClick)="toggleAgreed()" name="agreed"></mat-checkbox>
             I Agree with <a href="/privacy" target="_blank">Privacy,Term and Conditions.</a>
 <br>
-     <div class="button-row">
-       <button mat-button type="button" (click)="cancel()">Cancel</button>
-       <span style="color: crimson; margin: 5;" *ngIf="errors">  {{errors}}  </span>
-       <button mat-raised-button color="primary" >Register</button>
-       </div>
+<div class="button-row">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <span style="color: crimson; margin: 5;" *ngIf="errors">  {{errors}}  </span>
+  <button mat-raised-button color="primary">Register</button>
+  <br>
+  <br>
+  <br>
+
+</div>
    </form>
