@@ -1,23 +1,20 @@
 
- <ngx-loading [show]="loading"></ngx-loading>
-<h3>Login</h3>
-
+<ngx-loading [show]="loading"></ngx-loading>
+<h3 class="mb-3">Login</h3>
 
 <form class="example-form" ngNativeValidate (ngSubmit)="signIn()">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Email"  [(ngModel)]="email" name="email" required>
-    </mat-form-field>
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Password"  type="password" [(ngModel)]="password" name="password" required>
-    </mat-form-field>
-
-    <div class="button-row">
-      <button mat-button type="button" (click)="cancel()" >Cancel</button>
-      <button mat-raised-button type="button" (click)="signIn()" color="primary">Login</button>
-      </div>
-      <span *ngIf="errors">{{errors}}</span>
-  </form>
- <a class="nav-link" (click)="forgotPassword()">Forgot Password</a>
- <div (click)="saveUrl()"> <a class="nav-link " >Don't have account Register first</a></div>
-
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Email" [(ngModel)]="email" name="email" required>
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Password" type="password" [(ngModel)]="password" name="password" required>
+  </mat-form-field>
+  <div class="button-row mt-2 mb-4">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-raised-button type="button" (click)="signIn()" color="primary">Login</button>
+  </div>
+  <span *ngIf="errors">{{errors}}</span>
+</form>
+<a class="nav-link" (click)="forgotPassword()">Forgot Password</a>
+<div (click)="saveUrl()"> <a class="nav-link ">Don't have account Register first</a></div>
 

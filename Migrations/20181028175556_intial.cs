@@ -1,10 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HGT6.Migrations
 {
-    public partial class Intialio : Migration
+    public partial class intial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,7 +68,7 @@ namespace HGT6.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CapthaText = table.Column<string>(nullable: true),
                     CapthaAnswer = table.Column<string>(nullable: true)
                 },
@@ -78,12 +78,29 @@ namespace HGT6.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Errors",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Exception = table.Column<string>(nullable: true),
+                    InnerException = table.Column<string>(nullable: true),
+                    Message = table.Column<string>(nullable: true),
+                    Time = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Errors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Feedbacks",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    Message = table.Column<string>(nullable: true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Message = table.Column<string>(nullable: true),
+                    UserEmail = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -95,7 +112,7 @@ namespace HGT6.Migrations
                 columns: table => new
                 {
                     ID = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     VideoId = table.Column<long>(nullable: false),
                     UserId = table.Column<string>(nullable: true)
                 },
@@ -109,8 +126,10 @@ namespace HGT6.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
-                    Path = table.Column<string>(nullable: true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Path = table.Column<string>(nullable: true),
+                    UserEmail = table.Column<string>(nullable: true),
+                    Time = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,7 +141,7 @@ namespace HGT6.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -143,7 +162,7 @@ namespace HGT6.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -228,7 +247,7 @@ namespace HGT6.Migrations
                 columns: table => new
                 {
                     ID = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     VideoId = table.Column<long>(nullable: false),
                     CommentText = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
@@ -251,7 +270,7 @@ namespace HGT6.Migrations
                 columns: table => new
                 {
                     ID = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(nullable: true),
                     Format = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
@@ -270,6 +289,7 @@ namespace HGT6.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     IsUploaded = table.Column<bool>(nullable: false),
                     SponseredVideo = table.Column<bool>(nullable: false),
+                    ExternalURL = table.Column<string>(nullable: true),
                     HGTUserID = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -292,7 +312,8 @@ namespace HGT6.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -318,7 +339,8 @@ namespace HGT6.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_HGTUserID",
@@ -353,6 +375,9 @@ namespace HGT6.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Errors");
 
             migrationBuilder.DropTable(
                 name: "Feedbacks");

@@ -1,7 +1,7 @@
 
-  <div *ngIf="!isAuthenticated">
-     Login First
+  <div class="mt-5 mr-4" *ngIf="!isAuthenticated">
+     You Need to Login to Upload a video
   <button (click)="Login()">Login</button>
 </div>
-  <app-thumbnail-extractor *ngIf="isAuthenticated"></app-thumbnail-extractor>
+<app-thumbnail-extractor *ngIf="isAuthenticated"></app-thumbnail-extractor>
 

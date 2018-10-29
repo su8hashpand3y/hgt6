@@ -8,7 +8,8 @@ namespace HGT6.Models
 {
     public class TempVideo
     {
-        public long Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public virtual long Id { get; set; }
         public string Path { get; set; }
         public string  UserEmail { get; set; }
         public DateTime Time { get; set; } = DateTime.Now;

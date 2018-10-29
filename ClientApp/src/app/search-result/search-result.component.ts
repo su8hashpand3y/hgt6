@@ -30,26 +30,34 @@ export class SearchResultComponent implements OnInit {
 }
 
   ngOnInit() {
-    this.loading= true;
-    this.id = this.route.snapshot.params['id'];
-    this.http.get<IServiceTypedResponse<VideoViewModel[]>>(this.baseAddress.get() + `/Main/SearchVideo?searchTerm=${this.route.snapshot.params['id']}`).subscribe(x=>
-      {
-        if(x.status == "good")
-        {
-        this.videos.push(...x.message)
-        if(x.message.length < 10){
-          this.isFullListDisplayed = true;
-        }
-        }
-        if(x.status == "bad")
-        {
-             this.toastr.error(`Problem Loading Videos`);
-      }
-      this.loading = false;
-    },e => this.loading = false);
+    //this.loading= true;
+   
+
+    this.route.params.subscribe(x => {
+      this.fetchVideos();
+    });
+    //this.http.get<IServiceTypedResponse<VideoViewModel[]>>(this.baseAddress.get() + `/Main/SearchVideo?searchTerm=${this.route.snapshot.params['id']}`).subscribe(x=>
+    //  {
+    //  this.loading = false;
+    //  if (x.status == "good")
+    //    {
+    //    this.videos.push(...x.message)
+    //    if(x.message.length < 10){
+    //      this.isFullListDisplayed = true;
+    //    }
+    //    }
+    //    if(x.status == "bad")
+    //    {
+    //         this.toastr.error(`Problem Loading Videos`);
+    //  }
+    //},e => this.loading = false);
+
+    //this.fetchVideos();
   }
 
-  fetchVideos(take?:Number){
+  fetchVideos(take?: Number) {
+    this.id = this.route.snapshot.params['id'];
+    this.videos = [];
     this.http.get<IServiceTypedResponse<VideoViewModel[]>>(this.baseAddress.get() + `/Main/SearchVideo?searchTerm=${this.id}&skip=${this.videos.length}`).subscribe(x=>
       {
         if(x.status == "good")

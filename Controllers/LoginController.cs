@@ -148,7 +148,7 @@ namespace HGT6.Controllers
                         context.SaveChanges();
                         // Send the verification Mail
                         // Login the User and send a token back
-                        return this.LoginUser(new LoginViewModel { Email= model.Email,Password= model.Password});
+                        return this.LoginUser(new LoginViewModel { Email= newUser.Email,Password= model.Password});
                     }
                     else
                     {
@@ -282,6 +282,7 @@ namespace HGT6.Controllers
                 return Ok(new ServiceResponse { Status = "good", Message = "We have mailed you code to reset your password" });
             }
 
+            foundUser.VerificationCode = "Not available";
             return Ok(new ServiceResponse { Status = "error", Message = "Error in sending mail" });
         }
 
@@ -308,6 +309,13 @@ namespace HGT6.Controllers
 
             context.SaveChanges();
             return Ok(new ServiceResponse { Status = "good", Message = "Password Reset Successful" });
+        }
+
+        [Authorize]
+        [HttpPost("[action]")]
+        public IActionResult CheckAuthentication()
+        {
+            return Ok(new ServiceResponse { Status = "success", Message = "Go Ahead" });
         }
     }
 }

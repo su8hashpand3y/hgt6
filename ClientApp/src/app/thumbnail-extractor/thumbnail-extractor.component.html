@@ -2,8 +2,8 @@
 
 
  <ngx-loading [show]="loading"></ngx-loading>
- <h1>Upload</h1>
- <h3 *ngIf ="loading">Uploading video will take few minutes depending upon video size ,please be patient</h3>
+ <h3 class="mt-4 mb-3">Select a video to Upload (< 500MB)</h3>
+ <h5 class="mt-4 mb-3" *ngIf ="loading">Uploading video will take few minutes depending upon video size ,please be patient</h5>
 
 <video  #video (loadedmetadata)="loadedmetadata()" hidden [src]="videoUrl ? videoUrl :  'http://fakeAdress.com'" crossOrigin="anonymous">
 </video>
@@ -15,8 +15,8 @@
         </div>
 
         <div *ngIf="loadedToStore">
-        <div class="row justify-content-center">
-            We have Selected a Thumbnail to show for your video,play video and use Below Button to change it
+        <div class="row justify-content-center m-3">
+            We have Selected a Thumbnail to show for your video,play video and use below 'Set Thumbnail' Button to change it, also click 'Set Thumbnail' if you see blank
         </div>
         </div>
 
@@ -37,20 +37,20 @@
             </mat-slider>
         </div>
 
-        <div class="row justify-content-center">
-            <button (click)="snap()">Click here If you See Blank</button>
+        <div class="row justify-content-center m-4">
+            <button (click)="snap()">Set Thumbnail</button>
         </div>
 
         <mat-form-field class="example-full-width">
-                <input matInput placeholder="Name"  [(ngModel)]="name" name="name" >
+                <input matInput placeholder="Name"  [(ngModel)]="name" name="name" required>
               </mat-form-field>
 
               <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Description"  [(ngModel)]="description" name="description" >
+                    <input matInput placeholder="Description"  [(ngModel)]="description" name="description" required>
                   </mat-form-field>
 
                   <mat-form-field>
-                        <mat-select placeholder="category" [(ngModel)]="category" name="category" aria-required>
+                        <mat-select placeholder="category" [(ngModel)]="category" name="category" aria-required required>
                           <mat-option>None</mat-option>
                           <mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
                         </mat-select>
@@ -63,10 +63,10 @@
                           <input [(ngModel)]="capthaId" name="capthaId" hidden/>
                           <div class="example-selected-value">Prove You are Human, type <b>{{capthaText}}</b> below</div>
                             <mat-form-field class="example-full-width">
-                                <input matInput  type="captha"  [(ngModel)]="captha" name="captha" required>
+                                <input matInput  type="text"  [(ngModel)]="captha" name="captha" required>
                               </mat-form-field>
 
-                            <div class="button-row">
+                            <div class="button-row m-3">
                               <button mat-button (click)="cancel()">Cancel</button>
                               <span style="color:orangered" *ngIf="errors">{{errors}}</span>
                               <button mat-raised-button color="primary" (click)="upload()">Upload</button>

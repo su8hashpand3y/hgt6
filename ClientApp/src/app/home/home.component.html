@@ -1,4 +1,4 @@
-<h3 class="center">Himachal Got Talent</h3>
+<h5 class="center mt-5 mb-5">Awesome Videos By People Of Himachal</h5>
     <div class="container">
       <div class="row"
      infiniteScroll
@@ -7,13 +7,12 @@
      [infiniteScrollDisabled]="isFullListDisplayed"
      [scrollWindow]="true"
      (scrolled)="onScroll()">
-        <div class="col-md-4" (click)="goToVideo(vid)" *ngFor="let vid of videos" style="padding: 2px">
-          <div class="embed-responsive1 embed-responsive-16by91">
-            <img class="video-fluid1 z-depth-1 " [src]="vid.posterUrl"/>
-         
-          <div>{{vid.title}}</div>
-          <div>By {{vid.userFirstName}} from {{vid.userDistrict}} </div>
-        </div>
+        <div class="video__list col-md-4 mb-5"  (click)="goToVideo(vid)" *ngFor="let vid of videos" >
+          <img class="fullWidth" [src]="vid.posterUrl"/>
+          <div class="mt-2">
+            <div>{{vid.title}}</div>
+            <div>By {{vid.userFirstName}} from {{vid.userDistrict}} </div>
+          </div>
         </div>
       </div>
       </div>

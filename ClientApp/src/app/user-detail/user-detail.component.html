@@ -1,25 +1,19 @@
-<br>
-<br>
 
-
-<div  *ngIf="user" >
-    <div class="container">
-        <div class="row">
-<img *ngIf="user.avatarImage" [src]='user.avatarImage'  name="profilePic" class="col-md-2"><br>
-<div class="col-md-10">
-<div>First Name: <b>{{user.firstName}}</b></div>
-<div>Last Name: <b>{{user.lastName}}</b></div>
-<div>Age: <b>{{user.age}}</b></div>
-<div>Gender: <b>{{user.gender}}</b></div>
-<div>Town: <b>{{user.town}}</b></div>
-<div>District: <b>{{user.district}}</b></div>
-</div>
-<br>
-
-<div>Other Videos By {{user.firstName}}</div>
-</div>
-</div>
-<br>
+<div class="mt-4"  *ngIf="user" >
+  <div class="container">
+    <div class="row">
+      <img *ngIf="user.avatarImage" [src]='user.avatarImage' name="profilePic" class="col-md-2"><br>
+      <div class="col-md-10 m-5">
+        <div>First Name: <b>{{user.firstName}}</b></div>
+        <div *ngIf="user.lastName">Last Name: <b>{{user.lastName}}</b></div>
+        <div *ngIf="user.age >0 ">Age: <b>{{user.age}}</b></div>
+        <div>Gender: <b>{{user.gender}}</b></div>
+        <div>Town: <b>{{user.town}}</b></div>
+        <div>District: <b>{{user.district}}</b></div>
+      </div>
+    </div>
+    <div class="m-5">Other videos by {{user.firstName}}</div>
+  </div>
 
 <div class="container">
   <div class="row">

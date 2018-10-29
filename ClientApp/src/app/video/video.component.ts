@@ -25,14 +25,13 @@ export class VideoComponent implements OnInit {
     this.loading= true;
     this.id = this.route.snapshot.params['id'];
     this.http.get<IServiceTypedResponse<VideoViewModel>>(this.baseAddress.get()+"/video/GetVideo",{params:this.route.snapshot.params}).subscribe(x=>{
-      
+      this.loading= false;
       if(x.status == 'good'){
              this.video = x.message;
       }
       if(x.status == 'bad'){
 
       }
-      this.loading= false;
     }, err => this.loading = false);
   }
 

@@ -57,7 +57,7 @@ namespace HGT6.Controllers
             return Ok(new ServiceTypedResponse<List<VideoViewModel>> { Status = "good", Message = result });
         }
 
-        public IActionResult SearchVideo(string searchTerm, int skip, int take = 10)
+        public IActionResult SearchVideo(string searchTerm, int skip, int take = 50)
         {
             var result = new List<VideoViewModel>();
             var context = this.services.GetService(typeof(HGTDbContext)) as HGTDbContext;

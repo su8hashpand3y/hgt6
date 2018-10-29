@@ -1,11 +1,13 @@
 
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HGT6.Models
 { 
      public class VideoInfo
     {
-        public long ID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public virtual long ID { get; set; }
         public string Title { get; set; }
         public string Format { get; set; }
         public string Description { get; set; }
@@ -25,7 +27,8 @@ namespace HGT6.Models
         public bool IsUploaded { get; set; }
         public bool SponseredVideo { get; set; }
 
+        public string ExternalURL { get; set; }
         public string HGTUserID { get; set; }
-        public HGTUser HGTUser { get; set; }
+        public virtual HGTUser HGTUser { get; set; }
     }
 }

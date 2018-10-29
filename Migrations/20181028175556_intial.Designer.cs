@@ -3,23 +3,22 @@ using System;
 using HGT6.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HGT6.Migrations
 {
     [DbContext(typeof(HGTDbContext))]
-    [Migration("20180715083801_new1")]
-    partial class new1
+    [Migration("20181028175556_intial")]
+    partial class intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("HGT6.Models.Captha", b =>
                 {
@@ -166,7 +165,8 @@ namespace HGT6.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -194,6 +194,8 @@ namespace HGT6.Migrations
 
                     b.Property<DateTime>("Time");
 
+                    b.Property<string>("UserEmail");
+
                     b.HasKey("Id");
 
                     b.ToTable("TempVideo");
@@ -211,6 +213,8 @@ namespace HGT6.Migrations
                     b.Property<string>("Description");
 
                     b.Property<int>("Donation");
+
+                    b.Property<string>("ExternalURL");
 
                     b.Property<string>("Format");
 
@@ -267,7 +271,8 @@ namespace HGT6.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex");
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
                 });

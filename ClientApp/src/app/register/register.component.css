@@ -30,4 +30,17 @@
   .example-margin {
     margin: 0 10px;
   }
-  
+
+  .center{
+    margin:auto;
+  }
+
+.textCenter {
+  text-align: center;
+}
+
+.nav-link{
+  display:unset;
+}
+
+

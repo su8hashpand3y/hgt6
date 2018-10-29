@@ -4,3 +4,13 @@
     padding-top: 50px;
   }
 }
+
+.baseColor {
+  background-color:rgba(18, 234, 42, 0.33);
+  opacity:50;
+}
+
+.fixed{
+  position:absolute;
+  font-size:xx-small;
+}

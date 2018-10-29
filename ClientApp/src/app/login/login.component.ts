@@ -20,6 +20,9 @@ export class LoginComponent  {
   errors:string;
   constructor(private memory:MemoryService, private router:Router, private toast: ToastrService, private http: HttpClient, public dialogRef: MatDialogRef<LoginComponent>,private baseAddress:BaseAddressService ) { }
 
+  ngOnInit() {
+  }
+
   signOut() {
       localStorage.removeItem('token');
       this.toast.success("Successfully Logged Out")
@@ -32,24 +35,36 @@ export class LoginComponent  {
           password: this.password
       };  
     this.http.post<IServiceResponse>(this.baseAddress.get() + "/api/Login/Login", user).subscribe(x => {
+      try {
+        this.loading = false;
+        if (x.status == 'registerd') {
+          try {
+            localStorage.setItem('token', x.message);
+            this.toast.info(`Thank You.You are logged in as ${user.email}`);
+            if (this.dialogRef.close)
+              this.dialogRef.close(x.message);
+            if (this.router.url == '/Login')
+              this.router.navigateByUrl('/Home');
+          }
+          catch{
+            this.toast.info(`Private Browsing is not supported`);
+          }
 
-      if (x.status == 'registerd') {
-        localStorage.setItem('token', x.message);
-        this.toast.info(`Thank You.You are logged in as ${user.email}`);
-        if (this.dialogRef.close)
-          this.dialogRef.close(x.message);
-        if (this.router.url == '/Login')
-          this.router.navigateByUrl('/Home');
-      }
-      else
-        this.toast.error(`${this.email} was not Logged In`);
+         
+        }
+        else
+            this.toast.error(`${this.email} was not Logged In`);
 
-      if (x.status == 'error') {
-        this.toast.error(x.message);
+        if (x.status == 'error') {
+            this.toast.error(x.message);
+        }
+        if (this.dialogRef)
+          this.dialogRef.close();
       }
-      if (this.dialogRef)
-        this.dialogRef.close();
-      this.loading = false
+      catch (e) {
+        console.log(e);
+      }
+      
     }, e => this.loading = false);
   }
 

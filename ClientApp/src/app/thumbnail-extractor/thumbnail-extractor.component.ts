@@ -84,7 +84,7 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
     this.max = this.video.duration;
     this.canvas.crossOrigin = "Anonymous";
     this.video.currentTime= this.video.duration / 2;
-    setTimeout(x=>this.snap(),500);
+    setTimeout(x=>this.snap(),1500);
   }
   
   videoSelected(event){
@@ -110,8 +110,11 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
       headers.set('Content-Type', 'multipart/form-data');
 
 
-       this.http.post<IServiceResponse>(this.baseAddress.get()+"/api/Upload/UploadFileToStore?ext="+ext,formData).subscribe(x=>{
-         if(x.status =='success'){
+      this.http.post<IServiceResponse>(this.baseAddress.get() + "/api/Upload/UploadFileToStore?ext=" + ext, formData, { reportProgress: true,}).subscribe(x=>{
+
+        console.log(`Event3 is ${x}`);
+        this.loading = false;
+         if (x.status == 'success') {
            this.videoUrl=x.message; 
            this.loadedToStore = true;
          }
@@ -119,7 +122,7 @@ export class ThumbnailExtractorComponent implements OnInit,Iloader {
            this.errors = x.message;
         }
 
-        this.loading=false;
+        
        }, (e) => {
          this.loading = false;
        });

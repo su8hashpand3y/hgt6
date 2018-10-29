@@ -21,7 +21,9 @@ export class CommentsComponent implements OnInit {
   loading:boolean=false;
   comments:CommentViewModel[]= [];
 
-  isAuthenticated:boolean;
+  isAuthenticated: boolean = false;
+  isTokenPresent: boolean = false;
+
   constructor(private http:HttpClient,private authService:AuthService,private baseAddress:BaseAddressService) { }
 
   ngOnChanges(changes: SimpleChanges){
@@ -54,10 +56,10 @@ export class CommentsComponent implements OnInit {
     this.comments.unshift({ commentText: this.UserComment, userFirstName: "Me", id: null});
         this.UserComment = "";
     this.http.post<IServiceResponse>(this.baseAddress.get() + '/Video/Comment', data).subscribe(x => {
+      this.loading = false;
       if (x.status == 'good') {
 
       }
-      this.loading = false;
     }, err => this.loading = false);
   }
 
@@ -76,12 +78,18 @@ export class CommentsComponent implements OnInit {
 
   ngOnInit() {
     this.liked = this.isLikedByMe;
-     this.isAuthenticated = this.authService.isAuthenticated() ?  true: false;
+    this.loginChecker();
+  }
+
+  loginChecker() {
+    this.isTokenPresent = this.authService.isTokenPresent() ? true : false;
+    if (this.isTokenPresent) {
+      this.authService.isAuthorised().subscribe((x: boolean) => this.isAuthenticated = x);
+    }
   }
 
   login(){
-   this.authService.openLoginDialog().subscribe((x:any)=> this.isAuthenticated = this.authService.isAuthenticated() ?  true: false);
-
+    this.authService.openLoginDialog().subscribe((x: any) => this.loginChecker());
   }
 
 }

@@ -44,10 +44,8 @@ namespace HGT6
             var MYPS = $"User ID=hgtadmin;Password={Environment.GetEnvironmentVariable("CPASS")};Host=hgtinstance.csftqsjshidx.ap-south-1.rds.amazonaws.com;Port=5432;Database=hgtDB;Pooling=true;";
 
             services.AddDbContext<HGTDbContext>(options =>
-              //options.UseSqlServer(Configuration.GetConnectionString("HGTDB")));
-              // options.UseSqlServer(Configuration.GetConnectionString("AWSSQL")));
-               options.UseNpgsql(MYPS));
-              // options.UseNpgsql(Configuration.GetConnectionString("MYPSLocal")));
+              options.UseSqlServer(Configuration.GetConnectionString("HGTDB")));
+               // options.UseNpgsql(MYPS));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
        .AddJwtBearer(options =>

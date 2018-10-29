@@ -9,14 +9,22 @@ import { AuthService } from '../auth.service';
 export class UploadComponent implements OnInit {
 
   constructor(private authService:AuthService) { }
-  isAuthenticated:boolean= false;
+  isTokenPresent:boolean= false;
+  isAuthenticated: boolean = false;
   ngOnInit() {
-    this.isAuthenticated = this.authService.isAuthenticated() ? true : false;
+    this.loginChecker();
+  }
+
+  loginChecker() {
+    this.isTokenPresent = this.authService.isTokenPresent() ? true : false;
+    if (this.isTokenPresent) {
+      this.authService.isAuthorised().subscribe((x: boolean) => this.isAuthenticated = x);
+    }
   }
 
   Login(){
     this.authService.openLoginDialog().subscribe(x=>{
-    this.isAuthenticated = this.authService.isAuthenticated() ? true : false;
+      this.loginChecker();
     });
   }
 

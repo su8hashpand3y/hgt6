@@ -5,19 +5,26 @@ import { Subject } from 'rxjs';
 import { LoginComponent } from './login/login.component';
 import { IServiceResponse } from './ViewModels/IServiceResponse';
 import { ToastrService } from 'ngx-toastr';
+import { BaseAddressService } from './base-address.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private dialog: MatDialog,private toaster:ToastrService) { }
+  constructor(private http: HttpClient, private dialog: MatDialog, private toaster: ToastrService, private baseAddress: BaseAddressService) { }
 
- 
 
-  isAuthenticated() {
-      let token = localStorage.getItem('token');
-      return token;
+  isAuthorised() {
+    let finish = new Subject();
+    this.http.post<IServiceResponse>(this.baseAddress.get() + "/api/login/CheckAuthentication", {}).subscribe(x => finish.next(x.status == "success"));
+    return finish;
+  }
+
+
+  isTokenPresent() {
+    let token = localStorage.getItem('token');
+     return token;
   }
 
 //   login(user: { email: string, password: string }) {

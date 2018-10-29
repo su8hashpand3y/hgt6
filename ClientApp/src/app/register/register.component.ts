@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
   confirmEmail:string;
 
 
-  agreed:boolean=false;
+  agreed: boolean = true;
 
   errors:string;
 
@@ -48,10 +48,14 @@ export class RegisterComponent implements OnInit {
     'Other',
   ];
 
-  districts =['Bilaspur','Chamba','Hamirpur','kangra','Kinnaur','Kullu','Lahaul and Spiti','Mandi','Shimla','Sirmaur','Solan','Una'];
+  districts = ['Bilaspur', 'Chamba', 'Hamirpur', 'kangra', 'Kinnaur', 'Kullu', 'Lahaul and Spiti', 'Mandi', 'Shimla', 'Sirmaur', 'Solan', 'Una'];
+
+
   constructor(private router: Router,private memory:MemoryService, private dialog: MatDialog,private http:HttpClient,private toaster:ToastrService,private baseAddress:BaseAddressService) {
   
-   }
+  }
+
+  
 
   ngOnInit() {
     this.http.get<IServiceTypedResponse<ICapthaResponse>>(this.baseAddress.get() +"/api/Login/getCaptha").subscribe( x => {
@@ -111,6 +115,8 @@ export class RegisterComponent implements OnInit {
       capthaId : this.capthaId,
       captha : this.captha,
     }
+
+    
     
     this.http.post<IServiceResponse>(this.baseAddress.get() + "/api/Login/Register", rvm).subscribe(x => {
       this.loading = false;
